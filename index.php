@@ -22,10 +22,11 @@ $usuario = $contrasena = "";
 $errorUsuario = $errorContrasena = "";
 
 // Procesar el formulario si fue enviado
+// Procesar el formulario si fue enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitizar las entradas
     $usuario = htmlspecialchars(mysqli_real_escape_string($con, $_POST['usuario']));
-    $contrasena = htmlspecialchars(mysqli_real_escape_string($con, $_POST['contrasena']));
+    $contrasena = trim(htmlspecialchars(mysqli_real_escape_string($con, $_POST['contrasena']))); // Uso de trim
 
     // Validación de campos vacíos
     if (empty($usuario)) {
@@ -44,21 +45,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Comprobamos si el usuario existe
         if (mysqli_num_rows($resultado) > 0) {
             $fila = mysqli_fetch_assoc($resultado);
-           
+
+          
 
             // Verificar la contraseña encriptada
             if (password_verify($contrasena, $fila['contraseña'])) {
-         
                 $_SESSION['id_usuario'] = $fila['id_usuario'];
 
-          
                 if ($fila['tipo_usuario'] === 'camarero') {
                     header("Location: camarero.php");
                 } elseif ($fila['tipo_usuario'] === 'manager') {
                     header("Location: manager.php");
                 } else {
-                   
-                    header("Location: camarero.php");
+                    header("Location: inicio.php"); // Página predeterminada
                 }
                 exit();
             } else {
@@ -69,6 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
+
 ?>
 
 <h1>Iniciar Sesión</h1>
