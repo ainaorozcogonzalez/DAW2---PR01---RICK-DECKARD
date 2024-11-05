@@ -17,15 +17,15 @@ if (isset($_SESSION['id_usuario'])) {
     exit();
 }
 
-// Variables para almacenar valores de entrada y errores
+// Inicializar variables
 $usuario = $contrasena = "";
 $errorUsuario = $errorContrasena = "";
 
 // Procesar el formulario si fue enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitizar las entradas
-    $usuario = htmlspecialchars(mysqli_real_escape_string($conexion, $_POST['usuario']));
-    $contrasena = htmlspecialchars(mysqli_real_escape_string($conexion, $_POST['contrasena']));
+    $usuario = htmlspecialchars(mysqli_real_escape_string($con, $_POST['usuario']));
+    $contrasena = htmlspecialchars(mysqli_real_escape_string($con, $_POST['contrasena']));
 
     // Validación de campos vacíos
     if (empty($usuario)) {
@@ -38,34 +38,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Si no hay errores, procedemos a validar contra la base de datos
     if (empty($errorUsuario) && empty($errorContrasena)) {
         // Ejecutar la consulta para obtener el usuario, contraseña encriptada y rol
-        $consulta = "SELECT id_usuario, contraseña, rol FROM usuarios WHERE usuario = '$usuario'";
-        $resultado = mysqli_query($conexion, $consulta);
+        $consulta = "SELECT id_usuario, contraseña, tipo_usuario FROM usuarios WHERE nombre_completo = '$usuario'";
+        $resultado = mysqli_query($con, $consulta);
 
         // Comprobamos si el usuario existe
         if (mysqli_num_rows($resultado) > 0) {
             $fila = mysqli_fetch_assoc($resultado);
+           
 
             // Verificar la contraseña encriptada
             if (password_verify($contrasena, $fila['contraseña'])) {
-                // Contraseña correcta, iniciar sesión y redirigir según el rol
+         
                 $_SESSION['id_usuario'] = $fila['id_usuario'];
 
-                // Verificar el rol del usuario
-                if ($fila['rol'] === 'camarero') {
+          
+                if ($fila['tipo_usuario'] === 'camarero') {
                     header("Location: camarero.php");
-                } elseif ($fila['rol'] === 'manager') {
+                } elseif ($fila['tipo_usuario'] === 'manager') {
                     header("Location: manager.php");
                 } else {
-                    // Si el rol no es ni 'camarero' ni 'manager', redirigir a una página de error o predeterminada
-                    header("Location: inicio.php");
+                   
+                    header("Location: camarero.php");
                 }
                 exit();
             } else {
-                // Contraseña incorrecta
                 $errorContrasena = "La contraseña es incorrecta.";
             }
         } else {
-            // Usuario no encontrado
             $errorUsuario = "El usuario no existe.";
         }
     }
@@ -78,9 +77,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <br>
     <span id="error-nombre" style="color: red;"><?php echo $errorUsuario; ?></span>
     <br>
-    <input type="password" name="contrasena" id="contraseña" placeholder="Contraseña">
+    <input type="password" name="contrasena" id="contrasena" placeholder="Contraseña">
     <br>
-    <span id="error-contraseña" style="color: red;"><?php echo $errorContrasena; ?></span>
+    <span id="error-contrasena" style="color: red;"><?php echo $errorContrasena; ?></span>
     <br><br>
     <input type="submit" name="iniciar_sesion" value="Iniciar Sesión">
 </form>
