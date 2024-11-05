@@ -38,14 +38,14 @@ CREATE TABLE Ocupaciones (
 
 -- INSERT TABLA USUARIOS CON CONTRASEÑAS HASHEADAS
 INSERT INTO Usuarios (nombre_completo, contraseña, tipo_usuario) VALUES
-('Aina Orozco', '$2y$10$E7IKNHiL8L1BWz2XyyFcOuv7KwGslcZ2qB0SHTJuj8nIvmBiUVZcG', 'manager'),
-('David Alvarez', '$2y$10$E7IKNHiL8L1BWz2XyyFcOuv7KwGslcZ2qB0SHTJuj8nIvmBiUVZcG', 'camarero'),
-('Deiby Buenaño', '$2y$10$E7IKNHiL8L1BWz2XyyFcOuv7KwGslcZ2qB0SHTJuj8nIvmBiUVZcG', 'camarero'),
-('Pol Marc Monter', '$2y$10$E7IKNHiL8L1BWz2XyyFcOuv7KwGslcZ2qB0SHTJuj8nIvmBiUVZcG', 'manager');
+('Aina Orozco', '$2a$12$zxGWHLfK1Ss0qIh9xD960ONgZ98PO.YAMAO2zYEfQYIF/fl0AWTVG', 'manager'),
+('David Alvarez', '$2a$12$zxGWHLfK1Ss0qIh9xD960ONgZ98PO.YAMAO2zYEfQYIF/fl0AWTVG', 'camarero'),
+('Deiby Buenaño', '$2a$12$zxGWHLfK1Ss0qIh9xD960ONgZ98PO.YAMAO2zYEfQYIF/fl0AWTVG', 'camarero'),
+('Pol Marc Monter', '$2a$12$zxGWHLfK1Ss0qIh9xD960ONgZ98PO.YAMAO2zYEfQYIF/fl0AWTVG', 'manager');
 
 -- INSERT TABLA SALAS
 INSERT INTO Salas (nombre, capacidad) VALUES
-('Terraza 1', 20),
+('Terraza 1', 24),
 ('Terraza 2', 20),
 ('Terraza 3', 20),
 ('Comedor 1', 50),
