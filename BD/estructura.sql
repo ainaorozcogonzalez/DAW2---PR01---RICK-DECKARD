@@ -1,16 +1,16 @@
 -- CREAMOS LA BASE DE DATOS
-    CREATE DATABASE db_restaurante;
+CREATE DATABASE db_restaurante;
 
 -- USAMOS LA BASE DE DATOS
-    USE db_restaurante;
+USE db_restaurante;
 
 -- CREMOS LA TABLA USUARIOS
-    CREATE TABLE Usuarios (
-        id_usuario INT PRIMARY KEY AUTO_INCREMENT,
-        nombre_completo VARCHAR(200) NOT NULL UNIQUE,
-        contraseña VARCHAR(255) NOT NULL,
-        tipo_usuario ENUM('camarero', 'manager') NOT NULL
-    );
+CREATE TABLE Usuarios (
+    id_usuario INT PRIMARY KEY AUTO_INCREMENT,
+    nombre_completo VARCHAR(200) NOT NULL UNIQUE,
+    contraseña VARCHAR(255) NOT NULL,
+    tipo_usuario ENUM('camarero', 'manager') NOT NULL
+);
 
 CREATE TABLE Salas (
     id_sala INT PRIMARY KEY AUTO_INCREMENT,
@@ -36,12 +36,12 @@ CREATE TABLE Ocupaciones (
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
 );
 
--- INSERT TABLA USUARIOS
+-- INSERT TABLA USUARIOS CON CONTRASEÑAS HASHEADAS
 INSERT INTO Usuarios (nombre_completo, contraseña, tipo_usuario) VALUES
-('Aina Orozco', 'qweQWE123', 'manager'),
-('David Alvarez', 'qweQWE123', 'camarero'),
-('Deiby Buenaño', 'qweQWE123', 'camarero'),
-('Pol Marc Monter', 'qweQWE123', 'manager');
+('Aina Orozco', '$2y$10$E7IKNHiL8L1BWz2XyyFcOuv7KwGslcZ2qB0SHTJuj8nIvmBiUVZcG', 'manager'),
+('David Alvarez', '$2y$10$E7IKNHiL8L1BWz2XyyFcOuv7KwGslcZ2qB0SHTJuj8nIvmBiUVZcG', 'camarero'),
+('Deiby Buenaño', '$2y$10$E7IKNHiL8L1BWz2XyyFcOuv7KwGslcZ2qB0SHTJuj8nIvmBiUVZcG', 'camarero'),
+('Pol Marc Monter', '$2y$10$E7IKNHiL8L1BWz2XyyFcOuv7KwGslcZ2qB0SHTJuj8nIvmBiUVZcG', 'manager');
 
 -- INSERT TABLA SALAS
 INSERT INTO Salas (nombre, capacidad) VALUES
