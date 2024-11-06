@@ -21,7 +21,6 @@ CREATE TABLE Salas (
 CREATE TABLE Mesas (
     id_mesa INT PRIMARY KEY AUTO_INCREMENT,
     id_sala INT,
-    numero INT NOT NULL,
     capacidad INT NOT NULL,
     estado ENUM('libre', 'ocupada') DEFAULT 'libre',
     FOREIGN KEY (id_sala) REFERENCES Salas(id_sala)
