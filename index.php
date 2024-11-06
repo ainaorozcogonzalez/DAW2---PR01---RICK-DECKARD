@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <script src="validaciones.js"></script>
+    <link rel="stylesheet" href="./CSS/styles.css">
+    <script src="./Js/validaciones.js"></script>
 </head>
 <body>
 
@@ -44,9 +45,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 // Redirigir según el tipo de usuario
                 if ($fila['tipo_usuario'] === 'camarero') {
-                    header("Location: camarero.php");
+                    header("Location: ./Camarero/camarero_home.php");
                 } elseif ($fila['tipo_usuario'] === 'manager') {
-                    header("Location: manager.php");
+                    header("Location: ./Manager/manager.php");
                 }
                 exit();
             } else {
