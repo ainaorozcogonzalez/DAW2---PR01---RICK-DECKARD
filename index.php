@@ -74,7 +74,6 @@
                     <label for="contraseña">Contraseña:</label>
                     <input type="password" class="form-control" id="contraseña" name="contrasena" placeholder="Introducir contraseña" value="<?php echo htmlspecialchars($usuario); ?>">
                     <br><span id="error-contraseña" class="error-message"><?php echo $errorContrasena; ?></span><br><br>
-                    <br>
                     <br><span id="error-nombre" class="error-message"><?php echo $errorUsuario; ?></span><br><br>
                 </div>
                 <button type="submit" name="login" class="boton">Iniciar sesión</button>
