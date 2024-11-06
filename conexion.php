@@ -2,7 +2,11 @@
 
 $host = "localhost";
 $usuario = "root";
+<<<<<<< HEAD
 $contrasena = "";
+=======
+$contrasena = "";
+>>>>>>> Deiby
 $nombre_bd = "db_restaurante";
 
 $con = mysqli_connect($host, $usuario, $contrasena, $nombre_bd);
