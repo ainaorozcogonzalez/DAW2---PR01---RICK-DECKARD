@@ -7,6 +7,8 @@
         exit();
     } else {
         $camareroActual = mysqli_real_escape_string($conn, htmlspecialchars($_SESSION['id_usuario']));
+
+        
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -47,9 +49,24 @@
                             Terrazas
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="terrazasDropdown">
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/terraza1.jpg')">Terraza 1</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/terraza2.jpg')">Terraza 2</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/terraza3.jpg')">Terraza 3</a></li>
+                            <?php
+                                
+                                $sqlTerrazas = "SELECT * FROM salas WHERE id_sala <= 3";
+                                $stmtTerrazas = mysqli_prepare($conn, $sqlTerrazas);
+                                mysqli_stmt_execute($stmtTerrazas);
+                                mysqli_stmt_store_result($stmtTerrazas);
+
+                                if (mysqli_stmt_num_rows($stmtTerrazas) > 0) {
+
+                                    mysqli_stmt_bind_result($stmtTerrazas, $id_sala, $nombre, $capacidad);
+
+                                    while (mysqli_stmt_fetch($stmtTerrazas)) {
+                                        echo '<li><a class="dropdown-item" href="#" onclick="showImage(\'../img/' . htmlspecialchars($nombre) . '.jpg\')">' . htmlspecialchars($nombre) . '</a></li>';
+                                    }
+
+                                }
+                                
+                            ?>
                         </ul>
                     </li>
                     <!-- Menú Comedores -->
@@ -58,8 +75,24 @@
                             Comedores
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="comedoresDropdown">
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/comedor1.jpg')">Comedor 1</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/comedor1.jpg')">Comedor 2</a></li>
+                            <?php
+                                
+                                $sqlTerrazas = "SELECT * FROM salas WHERE id_sala BETWEEN 4 AND 5";
+                                $stmtTerrazas = mysqli_prepare($conn, $sqlTerrazas);
+                                mysqli_stmt_execute($stmtTerrazas);
+                                mysqli_stmt_store_result($stmtTerrazas);
+
+                                if (mysqli_stmt_num_rows($stmtTerrazas) > 0) {
+
+                                    mysqli_stmt_bind_result($stmtTerrazas, $id_sala, $nombre, $capacidad);
+
+                                    while (mysqli_stmt_fetch($stmtTerrazas)) {
+                                        echo '<li><a class="dropdown-item" href="#" onclick="showImage(\'../img/' . htmlspecialchars($nombre) . '.jpg\')">' . htmlspecialchars($nombre) . '</a></li>';
+                                    }
+
+                                }
+                                
+                            ?>
                         </ul>
                     </li>
                     <!-- Menú Salas Privadas -->
@@ -68,10 +101,24 @@
                             Salas Privadas
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="salasPrivadasDropdown">
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/priv1.jpg')">Sala Privada 1</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/priv2.jpg')">Sala Privada 2</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/priv3.jpg')">Sala Privada 3</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/priv4.jpg')">Sala Privada 4</a></li>
+                            <?php
+                                
+                                $sqlTerrazas = "SELECT * FROM salas WHERE id_sala BETWEEN 6 AND 8";
+                                $stmtTerrazas = mysqli_prepare($conn, $sqlTerrazas);
+                                mysqli_stmt_execute($stmtTerrazas);
+                                mysqli_stmt_store_result($stmtTerrazas);
+
+                                if (mysqli_stmt_num_rows($stmtTerrazas) > 0) {
+
+                                    mysqli_stmt_bind_result($stmtTerrazas, $id_sala, $nombre, $capacidad);
+
+                                    while (mysqli_stmt_fetch($stmtTerrazas)) {
+                                        echo '<li><a class="dropdown-item" href="#" onclick="showImage(\'../img/' . htmlspecialchars($nombre) . '.jpg\')">' . htmlspecialchars($nombre) . '</a></li>';
+                                    }
+
+                                }
+                                
+                            ?>
                         </ul>
                     </li>
                 </ul>
@@ -135,6 +182,7 @@
     </div>
 
     <script>
+        
         // Función para mostrar la imagen según la terraza seleccionada
         function showImage(imageName) {
             const img = document.getElementById('displayedImage');
