@@ -68,17 +68,16 @@
                 <div class="inputs">
                     <label class="labelLogIn" for="nombre">Usuario:</label>
                     <input class="inputLogIn" type="text" class="form-control" id="nombre" name="nombre" placeholder="Introducir usuario" value="<?php echo htmlspecialchars($usuario); ?>">
-                    <br><span id="error-nombre" class="error-message"><?php echo $errorUsuario; ?></span><br><br>
+                    <br><span id="error-nombre" class="error-message"></span><br><br>
 
                 </div>
                 <div class="inputs">
                     <label class="labelLogIn" for="contraseña">Contraseña:</label>
                     <input class="inputLogIn" type="password" class="form-control" id="contraseña" name="contrasena" placeholder="Introducir contraseña" value="<?php echo htmlspecialchars($usuario); ?>">
                     <br><span id="error-contraseña" class="error-message"><?php echo $errorContrasena; ?></span><br><br>
-<<<<<<< HEAD
+                    <br>
                     <br><span id="error-nombre" class="error-message"><?php echo $errorUsuario; ?></span><br><br>
-=======
->>>>>>> 526382e846e19097445e6da9e198dde8217e6d86
+
                 </div>
                 <button type="submit" name="login" class="botonLogIn">Iniciar sesión</button>
             </form>
