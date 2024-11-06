@@ -26,7 +26,7 @@ COLLATE = utf8_unicode_ci;
 CREATE TABLE `db_restaurante`.`mesas` (
   `id_mesa` INT NOT NULL AUTO_INCREMENT,
   `capacidad` INT NOT NULL,
-  `Mesascol` ENUM('libre', 'ocupada') NULL DEFAULT 'libre',
+  `estado` ENUM('libre', 'ocupada') NULL DEFAULT 'libre',
   `id_sala` INT NULL,
   PRIMARY KEY (`id_mesa`),
   INDEX `id_sala_idx` (`id_sala` ASC) VISIBLE,
