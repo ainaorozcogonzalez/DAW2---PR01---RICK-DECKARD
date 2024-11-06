@@ -89,7 +89,7 @@ if ($errores!=""){
 
     $datosRecibidos = array(
         'nombre' => $nombre,
-        'contrasena' => $contrasena,
+        'contrasena' => $contrasena
     );
 
     $datosDevueltos=http_build_query($datosRecibidos);

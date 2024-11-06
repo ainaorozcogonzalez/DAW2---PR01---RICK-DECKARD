@@ -14,7 +14,7 @@ if (mysqli_connect_errno()) {
 try {
 
     $conn = mysqli_connect($host, $usuario,$contrasena, $nombre_bd);
-    echo "conectado con el servidor <br>";
+    // echo "conectado con el servidor <br>";
 }
 catch (Exception $e) {
     echo "Error de conexión: ". $e->getMessage();

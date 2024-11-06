@@ -1,3 +1,13 @@
+<?php
+    include_once("../conexion.php");
+    session_start();
+
+    if (!isset($_SESSION['loggedin']) && !isset($_SESSION['id_usuario'])) {
+        header('Location: ' . '../index.php');
+        exit();
+    } else {
+        $camareroActual = mysqli_real_escape_string($conn, htmlspecialchars($_SESSION['id_usuario']));
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -69,6 +79,56 @@
         </div>
     </nav>
 
+    <?php
+        // SELECCIONAMOS todo DE 'mesas', JUNTAMOS con salas EN la id_sala,
+        // JUNTAMOS (LEFT JOIN) 'ocupaciones' EN la id_mesa Y en el caso que la fecha de liberación SEA NULA, O sea mayor que la fecha actual (la mesa sigue ocupada, o sigue ocupada pero se liberará en una fecha futura a la de ahora)
+        // JUNTAMOS (LEFT JOIN) 'usuarios' EN la id_usuario
+        // CUANDO el camarero de la ocupacion sea el mismo que el usuario de la sesión, o el camarero SEA NULO (las mesas que están ocupadas y las que no)
+        $sqlPáginaCamareros = "SELECT mesas.id_mesa, mesas.capacidad, mesas.estado, mesas.id_sala,
+        salas.id_sala, salas.nombre, salas.capacidad,
+        ocupaciones.id_ocupacion, ocupaciones.id_mesa, ocupaciones.fecha_ocupacion, ocupaciones.fecha_libera,
+        usuarios.id_usuario, usuarios.nombre_completo, usuarios.contraseña, usuarios.tipo_usuario
+        FROM mesas
+        INNER JOIN salas ON salas.id_sala = mesas.id_sala
+        LEFT JOIN ocupaciones ON ocupaciones.id_mesa = mesas.id_mesa AND (ocupaciones.fecha_libera IS NULL OR ocupaciones.fecha_libera > NOW())
+        LEFT JOIN usuarios ON usuarios.id_usuario = ocupaciones.id_usuario
+        WHERE ocupaciones.id_usuario = ? OR ocupaciones.id_usuario IS NULL
+        ORDER BY salas.id_sala, mesas.id_mesa";
+        $stmtPáginaCamareros = mysqli_prepare($conn, $sqlPáginaCamareros);
+        mysqli_stmt_bind_param($stmtPáginaCamareros, "i", $camareroActual);
+        mysqli_stmt_execute($stmtPáginaCamareros);
+        mysqli_stmt_store_result($stmtPáginaCamareros);
+
+        if (mysqli_stmt_num_rows($stmtPáginaCamareros) > 0) {
+
+            // Consulta a los datos de las 'mesas', 'salas', 'ocupaciones' y 'usuarios' (en orden)
+            mysqli_stmt_bind_result($stmtPáginaCamareros, $id_mesa, $capacidadMesa, $estadoMesa, $idSalaDeLaMesa,
+            $id_sala, $nombreSala, $capacidadSala,
+            $idMesaOcupada, $idCamareroQueOfreceLaMesa, $fechaOcupacion, $fechaLibera,
+            $id_usuario, $nombre, $contrasena, $tipoUsuario);
+
+
+            while (mysqli_stmt_fetch($stmtPáginaCamareros)) {
+
+                echo "<div>";
+                
+                echo "<p class=><strong>Mesa " . htmlspecialchars($id_mesa) . ":</strong> " . htmlspecialchars($estadoMesa) . "</p>";
+
+                if ($nombre != NULL) {
+                    echo "<p class=><strong>Camarero/a: </strong>" . htmlspecialchars($nombre) . "</p>";
+                } else {
+                    echo "<p class=><strong>Camarero/a: </strong> (Nadie ha asignado esta mesa) </p>";
+                }
+
+                echo "</div>";
+
+            }
+        } else {
+            echo "<p>No hay mesas</p>";
+        }
+
+    ?>
+
     <!-- Contenedor para mostrar la imagen -->
     <div class="image-container">
         <img id="displayedImage" src="" alt="Selecciona una terraza" style="display: none;">
@@ -87,3 +147,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-7r82R3sMKeU9DAStBbXzTc98O/YMNZ4eF9NLMb13K3uqo/W9Y5Hk4HaeQOG99UZ3" crossorigin="anonymous"></script>
 </body>
 </html>
+<?php
+    }
+?>
