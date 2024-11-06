@@ -81,3 +81,42 @@ input[type="password"] {
     width: 100%;
     object-fit: contain;
 }
+
+/* Responsive design: when screen size is smaller, adjust layout */
+@media (max-width: 800px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+        width: 90%;
+    }
+
+    body {
+        height: 130vh;
+    }
+
+    .left-section,
+    .right-section {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+
+    .left-section {
+        order: 2;
+        text-align: center;
+    }
+
+    .right-section {
+        order: 1;
+        padding: 20px;
+        text-align: center;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 80%;
+    }
+
+    .boton {
+        width: 80%;
+    }
+}
