@@ -63,24 +63,22 @@
     ?>
 
     <div class="container">
-        <!-- Left side: Formulario -->
         <div class="left-section">
             <form action="" method="POST">
                 <div class="inputs">
                     <label for="nombre">Usuario:</label>
                     <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Introducir usuario" value="<?php echo htmlspecialchars($usuario); ?>">
-                    <span id="error-nombre" class="error-message"><?php echo $errorUsuario; ?></span>
+                    <br><span id="error-nombre" class="error-message"><?php echo $errorUsuario; ?></span><br><br>
                 </div>
                 <div class="inputs">
                     <label for="contraseña">Contraseña:</label>
                     <input type="password" class="form-control" id="contraseña" name="contrasena" placeholder="Introducir contraseña" value="<?php echo htmlspecialchars($usuario); ?>">
-                    <span id="error-contraseña" class="error-message"><?php echo $errorContrasena; ?></span>
+                    <br><span id="error-contraseña" class="error-message"><?php echo $errorContrasena; ?></span><br><br>
                 </div>
                 <button type="submit" name="login" class="boton">Iniciar sesión</button>
             </form>
         </div>
 
-        <!-- Right side: Logo -->
         <div class="right-section">
             <img src="./img/LOGO-REST.png" alt="Logo" class="logo">
         </div>

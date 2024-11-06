@@ -3,8 +3,7 @@
 $host = "localhost";
 $usuario = "root";
 $contrasena = "";
-$nombre_bd = "";
-
+$nombre_bd = "db_restaurante";
 $con = mysqli_connect($host, $usuario, $contrasena, $nombre_bd);
 
 if (mysqli_connect_errno()) {
