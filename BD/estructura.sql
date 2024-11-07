@@ -74,14 +74,14 @@ INSERT INTO Usuarios (nombre_completo, contraseña, tipo_usuario) VALUES
 -- INSERT TABLA SALAS
 INSERT INTO Salas (nombre, capacidad) VALUES
 ('Terraza 1', 24),
-('Terraza 2', 20),
-('Terraza 3', 20),
-('Comedor 1', 50),
-('Comedor 2', 50),
-('Sala Privada 1', 10),
-('Sala Privada 2', 10),
-('Sala Privada 3', 10),
-('Sala Privada 4', 10);
+('Terraza 2', 54),
+('Terraza 3', 36),
+('Comedor 1', 54),
+('Comedor 2', 24),
+('Sala Privada 1', 36),
+('Sala Privada 2', 24),
+('Sala Privada 3', 54),
+('Sala Privada 4', 6);
 
 -- INSERT TABLA MESAS
 INSERT INTO Mesas (id_sala, capacidad) VALUES
