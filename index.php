@@ -73,7 +73,7 @@
                 </div>
                 <div class="inputs">
                     <label class="labelLogIn" for="contraseña">Contraseña:</label>
-                    <input class="inputLogIn" type="password" class="form-control" id="contraseña" name="contrasena" placeholder="Introducir contraseña" value="<?php echo htmlspecialchars($usuario); ?>">
+                    <input class="inputLogIn" type="password" class="form-control" id="contraseña" name="contrasena" placeholder="Introducir contraseña">
                     <br><span id="error-contraseña" class="error-message"><?php echo $errorContrasena; ?></span><br><br>
                     <br>
                     <br><span id="error-nombre" class="error-message"><?php echo $errorUsuario; ?></span><br><br>
