@@ -9,7 +9,7 @@
 
     } else {
 
-        $camareroActual = mysqli_real_escape_string($conn, htmlspecialchars($_SESSION['id_usuario']));
+        $camareroActual = mysqli_real_escape_string($con, htmlspecialchars($_SESSION['id_usuario']));
 
         // SELECCIONAMOS todo DE 'mesas', JUNTAMOS con salas EN la id_sala,
         // JUNTAMOS (LEFT JOIN) 'ocupaciones' EN la id_mesa Y en el caso que la fecha de liberación SEA NULA, O sea mayor que la fecha actual (la mesa sigue ocupada, o sigue ocupada pero se liberará en una fecha futura a la de ahora)
@@ -68,7 +68,7 @@
                             <?php
                                 
                                 $sqlTerrazas = "SELECT * FROM salas WHERE id_sala <= 3";
-                                $stmtTerrazas = mysqli_prepare($conn, $sqlTerrazas);
+                                $stmtTerrazas = mysqli_prepare($con, $sqlTerrazas);
                                 mysqli_stmt_execute($stmtTerrazas);
                                 mysqli_stmt_store_result($stmtTerrazas);
 
@@ -94,7 +94,7 @@
                             <?php
                                 
                                 $sqlTerrazas = "SELECT * FROM salas WHERE id_sala BETWEEN 4 AND 5";
-                                $stmtTerrazas = mysqli_prepare($conn, $sqlTerrazas);
+                                $stmtTerrazas = mysqli_prepare($con, $sqlTerrazas);
                                 mysqli_stmt_execute($stmtTerrazas);
                                 mysqli_stmt_store_result($stmtTerrazas);
 
@@ -120,7 +120,7 @@
                             <?php
                                 
                                 $sqlTerrazas = "SELECT * FROM salas WHERE id_sala BETWEEN 6 AND 8";
-                                $stmtTerrazas = mysqli_prepare($conn, $sqlTerrazas);
+                                $stmtTerrazas = mysqli_prepare($con, $sqlTerrazas);
                                 mysqli_stmt_execute($stmtTerrazas);
                                 mysqli_stmt_store_result($stmtTerrazas);
 
@@ -144,7 +144,7 @@
 
     <?php
 
-        $stmtPáginaCamareros = mysqli_prepare($conn, $sqlPáginaCamareros);
+        $stmtPáginaCamareros = mysqli_prepare($con, $sqlPáginaCamareros);
         mysqli_stmt_bind_param($stmtPáginaCamareros, "i", $camareroActual);
         mysqli_stmt_execute($stmtPáginaCamareros);
         mysqli_stmt_store_result($stmtPáginaCamareros);
