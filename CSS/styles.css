@@ -1,6 +1,5 @@
 * {
     margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
@@ -20,11 +19,6 @@
     float: left;
 }
 
-.column-1-footer {
-    width: 100%;
-    float: left;
-}
-
 .column-2 {
     width: 50%;
     float: left;
@@ -37,6 +31,7 @@
 
 .column-4 {
     width: 25%;
+    height: 85vh;
     float: left;
 }
 
@@ -52,6 +47,7 @@
 
 .column-75 {
     width: 75%;
+    height: 85vh;
     float: left;
 }
 
@@ -143,7 +139,7 @@
 
 /* Responsive design: when screen size is smaller, adjust layout */
 @media (max-width: 800px) {
-    .container {
+    #containerLogIn {
         flex-direction: column;
         height: auto;
         width: 90%;
@@ -180,3 +176,49 @@
 }
 
 /* Fin LogIn */
+/* Inicio Manager */
+#bodyMan{
+    background-image: url('../img/FondoMan.jpg');
+    margin: 6vh;
+}
+.imgMan {
+    height: 45vh;
+    transition: 0.5s;
+    border-radius: 20px;
+    filter: brightness(70%);
+}
+
+.image-container:hover .imgMan {
+    height: 47.4vh;
+    filter: brightness(50%);
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+}
+
+.image-container:hover .text-overlay {
+    opacity: 1;
+}
+
+.text-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    opacity: 0;
+    transition: opacity 0.5s;
+    text-align: center;
+    z-index: 1;
+}
+
+#h1Sel{
+    text-align: center;
+    padding-bottom: 18vh;
+}
+/* Fin Manager */
