@@ -57,7 +57,7 @@
 
                         // Redirigir según el tipo de usuario
                         if ($fila['tipo_usuario'] === 'camarero') {
-                            header("Location: ./Camarero/camarero_home.php");
+                            header("Location: ../Camarero/camarero_home.php");
                         } elseif ($fila['tipo_usuario'] === 'manager') {
                             header("Location: ./Manager/manager.php");
                         }

@@ -12,8 +12,6 @@
 
 <body id="bodyLogIn">
 
-
-
     <div id="containerLogIn">
         <div class="left-section">
             <form action="./validaciones/validacion.php" method="POST">
@@ -22,7 +20,7 @@
                     <input class="inputLogIn" type="text" class="form-control" id="nombre" name="nombre" placeholder="Introducir usuario" value="<?php if (isset($usuario)) {
                     echo htmlspecialchars($usuario);
                     } ?>">
-                    
+
                     <br><span id="error-nombre" class="error-message"></span>
                     <?php if (isset($_GET['usernameVacio'])) {echo "<p style='color: red;'>Debes ingresar un nombre de usuario</p>"; } ?>
 
