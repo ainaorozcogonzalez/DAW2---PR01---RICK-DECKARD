@@ -1,16 +1,30 @@
-
-<!-- Guardad sesion y redirecionar al index si no estas logeado anteiormente -->
-
 <?php
-include_once("../conexion.php");
-session_start();
+    include_once("../conexion.php");
+    session_start();
 
-if (!isset($_SESSION['id_usuario'])) {
-    header('Location: ' . '../index.php');
-    exit();
+    if (!isset($_SESSION['id_usuario'])) {
 
-} else {
-    $camareroActual = mysqli_real_escape_string($con, htmlspecialchars($_SESSION['id_usuario']));
+        header('Location: ' . '../index.php');
+        exit();
+
+    } else {
+
+        $camareroActual = mysqli_real_escape_string($conn, htmlspecialchars($_SESSION['id_usuario']));
+
+        // SELECCIONAMOS todo DE 'mesas', JUNTAMOS con salas EN la id_sala,
+        // JUNTAMOS (LEFT JOIN) 'ocupaciones' EN la id_mesa Y en el caso que la fecha de liberación SEA NULA, O sea mayor que la fecha actual (la mesa sigue ocupada, o sigue ocupada pero se liberará en una fecha futura a la de ahora)
+        // JUNTAMOS (LEFT JOIN) 'usuarios' EN la id_usuario
+        // CUANDO el camarero de la ocupacion sea el mismo que el usuario de la sesión, o el camarero SEA NULO (las mesas que están ocupadas y las que no)
+        $sqlPáginaCamareros = "SELECT mesas.id_mesa, mesas.capacidad, mesas.estado, mesas.id_sala,
+        salas.id_sala, salas.nombre, salas.capacidad,
+        ocupaciones.id_ocupacion, ocupaciones.id_mesa, ocupaciones.fecha_ocupacion, ocupaciones.fecha_libera,
+        usuarios.id_usuario, usuarios.nombre_completo, usuarios.contraseña, usuarios.tipo_usuario
+        FROM mesas
+        INNER JOIN salas ON salas.id_sala = mesas.id_sala
+        LEFT JOIN ocupaciones ON ocupaciones.id_mesa = mesas.id_mesa AND (ocupaciones.fecha_libera IS NULL OR ocupaciones.fecha_libera > NOW())
+        LEFT JOIN usuarios ON usuarios.id_usuario = ocupaciones.id_usuario
+        WHERE ocupaciones.id_usuario = ? OR ocupaciones.id_usuario IS NULL
+        ORDER BY salas.id_sala, mesas.id_mesa";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -37,7 +51,6 @@ if (!isset($_SESSION['id_usuario'])) {
     </style>
 </head>
 <body>
-    
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">LOGO</a>
@@ -52,9 +65,24 @@ if (!isset($_SESSION['id_usuario'])) {
                             Terrazas
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="terrazasDropdown">
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/terraza1.jpg')">Terraza 1</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/terraza2.jpg')">Terraza 2</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/terraza3.jpg')">Terraza 3</a></li>
+                            <?php
+                                
+                                $sqlTerrazas = "SELECT * FROM salas WHERE id_sala <= 3";
+                                $stmtTerrazas = mysqli_prepare($conn, $sqlTerrazas);
+                                mysqli_stmt_execute($stmtTerrazas);
+                                mysqli_stmt_store_result($stmtTerrazas);
+
+                                if (mysqli_stmt_num_rows($stmtTerrazas) > 0) {
+
+                                    mysqli_stmt_bind_result($stmtTerrazas, $id_sala, $nombre, $capacidad);
+
+                                    while (mysqli_stmt_fetch($stmtTerrazas)) {
+                                        echo '<li><a class="dropdown-item" href="#" onclick="showImage(\'../img/' . htmlspecialchars($nombre) . '.jpg\')">' . htmlspecialchars($nombre) . '</a></li>';
+                                    }
+
+                                }
+                                
+                            ?>
                         </ul>
                     </li>
                     <!-- Menú Comedores -->
@@ -63,8 +91,24 @@ if (!isset($_SESSION['id_usuario'])) {
                             Comedores
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="comedoresDropdown">
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/comedor1.jpg')">Comedor 1</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/comedor1.jpg')">Comedor 2</a></li>
+                            <?php
+                                
+                                $sqlTerrazas = "SELECT * FROM salas WHERE id_sala BETWEEN 4 AND 5";
+                                $stmtTerrazas = mysqli_prepare($conn, $sqlTerrazas);
+                                mysqli_stmt_execute($stmtTerrazas);
+                                mysqli_stmt_store_result($stmtTerrazas);
+
+                                if (mysqli_stmt_num_rows($stmtTerrazas) > 0) {
+
+                                    mysqli_stmt_bind_result($stmtTerrazas, $id_sala, $nombre, $capacidad);
+
+                                    while (mysqli_stmt_fetch($stmtTerrazas)) {
+                                        echo '<li><a class="dropdown-item" href="#" onclick="showImage(\'../img/' . htmlspecialchars($nombre) . '.jpg\')">' . htmlspecialchars($nombre) . '</a></li>';
+                                    }
+
+                                }
+                                
+                            ?>
                         </ul>
                     </li>
                     <!-- Menú Salas Privadas -->
@@ -73,10 +117,24 @@ if (!isset($_SESSION['id_usuario'])) {
                             Salas Privadas
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="salasPrivadasDropdown">
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/priv1.jpg')">Sala Privada 1</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/priv2.jpg')">Sala Privada 2</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/priv3.jpg')">Sala Privada 3</a></li>
-                            <li><a class="dropdown-item" href="#" onclick="showImage('../img/priv4.jpg')">Sala Privada 4</a></li>
+                            <?php
+                                
+                                $sqlTerrazas = "SELECT * FROM salas WHERE id_sala BETWEEN 6 AND 8";
+                                $stmtTerrazas = mysqli_prepare($conn, $sqlTerrazas);
+                                mysqli_stmt_execute($stmtTerrazas);
+                                mysqli_stmt_store_result($stmtTerrazas);
+
+                                if (mysqli_stmt_num_rows($stmtTerrazas) > 0) {
+
+                                    mysqli_stmt_bind_result($stmtTerrazas, $id_sala, $nombre, $capacidad);
+
+                                    while (mysqli_stmt_fetch($stmtTerrazas)) {
+                                        echo '<li><a class="dropdown-item" href="#" onclick="showImage(\'../img/' . htmlspecialchars($nombre) . '.jpg\')">' . htmlspecialchars($nombre) . '</a></li>';
+                                    }
+
+                                }
+                                
+                            ?>
                         </ul>
                     </li>
                 </ul>
@@ -84,12 +142,50 @@ if (!isset($_SESSION['id_usuario'])) {
         </div>
     </nav>
 
+    <?php
+
+        $stmtPáginaCamareros = mysqli_prepare($conn, $sqlPáginaCamareros);
+        mysqli_stmt_bind_param($stmtPáginaCamareros, "i", $camareroActual);
+        mysqli_stmt_execute($stmtPáginaCamareros);
+        mysqli_stmt_store_result($stmtPáginaCamareros);
+
+        if (mysqli_stmt_num_rows($stmtPáginaCamareros) > 0) {
+
+            // Consulta a los datos de las 'mesas', 'salas', 'ocupaciones' y 'usuarios' (en orden)
+            mysqli_stmt_bind_result($stmtPáginaCamareros, $id_mesa, $capacidadMesa, $estadoMesa, $idSalaDeLaMesa,
+            $id_sala, $nombreSala, $capacidadSala,
+            $idMesaOcupada, $idCamareroQueOfreceLaMesa, $fechaOcupacion, $fechaLibera,
+            $id_usuario, $nombre, $contrasena, $tipoUsuario);
+
+
+            while (mysqli_stmt_fetch($stmtPáginaCamareros)) {
+
+                echo "<div>";
+                
+                echo "<p class=><strong>Mesa " . htmlspecialchars($id_mesa) . ":</strong> " . htmlspecialchars($estadoMesa) . "</p>";
+
+                if ($nombre != NULL) {
+                    echo "<p class=><strong>Camarero/a: </strong>" . htmlspecialchars($nombre) . "</p>";
+                } else {
+                    echo "<p class=><strong>Camarero/a: </strong> (Nadie ha asignado esta mesa) </p>";
+                }
+
+                echo "</div>";
+
+            }
+        } else {
+            echo "<p>No hay mesas</p>";
+        }
+
+    ?>
+
     <!-- Contenedor para mostrar la imagen -->
     <div class="image-container">
         <img id="displayedImage" src="" alt="Selecciona una terraza" style="display: none;">
     </div>
 
     <script>
+        
         // Función para mostrar la imagen según la terraza seleccionada
         function showImage(imageName) {
             const img = document.getElementById('displayedImage');
@@ -103,5 +199,5 @@ if (!isset($_SESSION['id_usuario'])) {
 </body>
 </html>
 <?php
-    }
+    } 
 ?>
