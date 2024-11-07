@@ -16,13 +16,15 @@
 
     <div id="containerLogIn">
         <div class="left-section">
-            <form action="validacion.php" method="POST">
+            <form action="./validaciones/validacion.php" method="POST">
                 <div class="inputs">
                     <label class="labelLogIn" for="nombre">Usuario:</label>
                     <input class="inputLogIn" type="text" class="form-control" id="nombre" name="nombre" placeholder="Introducir usuario" value="<?php if (isset($usuario)) {
                     echo htmlspecialchars($usuario);
                     } ?>">
-                    <br><span id="error-nombre" class="error-message"></span><br><br>
+                    
+                    <br><span id="error-nombre" class="error-message"></span>
+                    <?php if (isset($_GET['usernameVacio'])) {echo "<p style='color: red;'>Debes ingresar un nombre de usuario</p>"; } ?>
 
                 </div>
                 <div class="inputs">
@@ -30,11 +32,13 @@
                     <input class="inputLogIn" type="password" class="form-control" id="contraseña" name="contrasena" placeholder="Introducir contraseña"">
                     <br><span id="error-contraseña" class="error-message"><?php if (isset($errorContrasena)) {
                     echo htmlspecialchars($errorContrasena);
-                    } ?></span><br><br>
+                    } ?></span>
                     <br>
                     <br><span id="error-nombre" class="error-message"><?php if (isset($errorUsuario)) {
                     echo htmlspecialchars($errorUsuario);
-                    } ?></span><br><br>
+                    } ?></span>
+                    <?php if (isset($_GET['contrasenaVacio'])) {echo "<p style='color: red;'>Debes ingresar una contraseña</p>"; } ?>
+                    <?php if (isset($_GET['contrasenaMal']) || isset($_GET['usernameMal'])) {echo "<p style='color: red;'>El usuario o contraseña no son correctos</p>"; } ?>
 
                 </div>
                 <button type="submit" name="login" class="botonLogIn">Iniciar sesión</button>
