@@ -1,14 +1,3 @@
-<?php
-session_start();
-include('conexion.php');
-
-$usuario = "";
-
-$errorUsuario = $_SESSION['errorUsuario'] ?? '';
-$errorContrasena = $_SESSION['errorContrasena'] ?? '';
-unset($_SESSION['errorUsuario'], $_SESSION['errorContrasena']);
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -23,21 +12,31 @@ unset($_SESSION['errorUsuario'], $_SESSION['errorContrasena']);
 
 <body id="bodyLogIn">
 
+
+
     <div id="containerLogIn">
         <div class="left-section">
             <form action="validacion.php" method="POST">
                 <div class="inputs">
                     <label class="labelLogIn" for="nombre">Usuario:</label>
-                    <input class="inputLogIn" type="text" id="nombre" name="nombre" placeholder="Introducir usuario" value="<?php echo htmlspecialchars($usuario ?? ''); ?>">
-                    <br><span id="error-nombre" class="error-message"><?php echo $errorUsuario; ?></span><br><br>
-                </div>
+                    <input class="inputLogIn" type="text" class="form-control" id="nombre" name="nombre" placeholder="Introducir usuario" value="<?php if (isset($usuario)) {
+                    echo htmlspecialchars($usuario);
+                    } ?>">
+                    <br><span id="error-nombre" class="error-message"></span><br><br>
 
+                </div>
                 <div class="inputs">
                     <label class="labelLogIn" for="contraseña">Contraseña:</label>
-                    <input class="inputLogIn" type="password" id="contraseña" name="contrasena" placeholder="Introducir contraseña">
-                    <br><span id="error-contraseña" class="error-message"><?php echo $errorContrasena; ?></span><br><br>
-                </div>
+                    <input class="inputLogIn" type="password" class="form-control" id="contraseña" name="contrasena" placeholder="Introducir contraseña"">
+                    <br><span id="error-contraseña" class="error-message"><?php if (isset($errorContrasena)) {
+                    echo htmlspecialchars($errorContrasena);
+                    } ?></span><br><br>
+                    <br>
+                    <br><span id="error-nombre" class="error-message"><?php if (isset($errorUsuario)) {
+                    echo htmlspecialchars($errorUsuario);
+                    } ?></span><br><br>
 
+                </div>
                 <button type="submit" name="login" class="botonLogIn">Iniciar sesión</button>
             </form>
         </div>
