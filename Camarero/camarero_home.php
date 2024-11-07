@@ -1,4 +1,17 @@
 
+<!-- Guardad sesion y redirecionar al index si no estas logeado anteiormente -->
+
+<?php
+include_once("../conexion.php");
+session_start();
+
+if (!isset($_SESSION['id_usuario'])) {
+    header('Location: ' . '../index.php');
+    exit();
+
+} else {
+    $camareroActual = mysqli_real_escape_string($con, htmlspecialchars($_SESSION['id_usuario']));
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -24,6 +37,7 @@
     </style>
 </head>
 <body>
+    
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">LOGO</a>
@@ -88,3 +102,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-7r82R3sMKeU9DAStBbXzTc98O/YMNZ4eF9NLMb13K3uqo/W9Y5Hk4HaeQOG99UZ3" crossorigin="anonymous"></script>
 </body>
 </html>
+<?php
+    }
+?>
