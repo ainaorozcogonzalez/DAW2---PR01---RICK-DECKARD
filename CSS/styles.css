@@ -4,7 +4,67 @@
     box-sizing: border-box;
 }
 
-body {
+/* Clear floats after the columns */
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+/* Diseño de columnas */
+
+.column-1 {
+    width: 100%;
+    float: left;
+}
+
+.column-1-footer {
+    width: 100%;
+    float: left;
+}
+
+.column-2 {
+    width: 50%;
+    float: left;
+}
+
+.column-3 {
+    width: 33.33%;
+    float: left;
+}
+
+.column-4 {
+    width: 25%;
+    float: left;
+}
+
+.column-5 {
+    width: 20%;
+    float: left;
+}
+
+.column-6 {
+    width: 16.66%;
+    float: left;
+}
+
+.column-75 {
+    width: 75%;
+    float: left;
+}
+
+/* clase para centrar contenido en horizontal y vertical (lo centra respecto al elemento padre) */
+
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* LogIn */
+#bodyLogIn {
     font-family: Arial, sans-serif;
     background-color: #f7f7f7;
     height: 100vh;
@@ -14,7 +74,7 @@ body {
     margin: 0;
 }
 
-.container {
+#containerLogIn {
     display: flex;
     width: 80%;
     height: 80vh;
@@ -41,15 +101,14 @@ body {
     padding: 40px;
 }
 
-label {
+.labelLogIn {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
     color: white;
 }
 
-input[type="text"],
-input[type="password"] {
+.inputLogIn {
     width: 60vh;
     padding: 10px;
     margin-bottom: 15px;
@@ -57,7 +116,7 @@ input[type="password"] {
     border-radius: 5px;
 }
 
-.boton {
+.botonLogIn {
     background-color: #e58517;
     color: white;
     border: none;
@@ -68,7 +127,7 @@ input[type="password"] {
     transition: background-color 0.3s;
 }
 
-.boton:hover {
+.botonLogIn:hover {
     background-color: #bf6f00ad;
 }
 
@@ -77,7 +136,7 @@ input[type="password"] {
     font-size: 14px;
 }
 
-.logo {
+#logoLogIn {
     width: 100%;
     object-fit: contain;
 }
@@ -90,7 +149,7 @@ input[type="password"] {
         width: 90%;
     }
 
-    body {
+    #bodyLogIn {
         height: 130vh;
     }
 
@@ -111,12 +170,13 @@ input[type="password"] {
         text-align: center;
     }
 
-    input[type="text"],
-    input[type="password"] {
+    .inputLogIn {
         width: 80%;
     }
 
-    .boton {
+    .botonLogIn {
         width: 80%;
     }
 }
+
+/* Fin LogIn */
