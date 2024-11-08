@@ -177,19 +177,20 @@
 
 /* Fin LogIn */
 /* Inicio Manager */
-#bodyMan{
+#bodyMan {
     background-image: url('../img/FondoMan.jpg');
     margin: 6vh;
 }
+
 .imgMan {
-    height: 45vh;
+    height: 44vh;
     transition: 0.5s;
     border-radius: 20px;
     filter: brightness(70%);
 }
 
 .image-container:hover .imgMan {
-    height: 47.4vh;
+    height: 46.5vh;
     filter: brightness(50%);
 }
 
@@ -209,7 +210,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
-    font-size: 1.5em;
+    font-size: 2.5em;
     font-weight: bold;
     opacity: 0;
     transition: opacity 0.5s;
@@ -217,8 +218,77 @@
     z-index: 1;
 }
 
-#h1Sel{
+#h1Sel {
     text-align: center;
-    padding-bottom: 18vh;
+    padding-bottom: 10vh;
 }
+
+.content {
+    display: none;
+}
+
+.ocultar {
+    display: none;
+}
+
+.volverBtn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.volverBtn:hover {
+    background-color: #2980b9;
+}
+
+#volverTerraza,
+#volverComedor,
+#volverPrivada {
+    display: none;
+}
+
 /* Fin Manager */
+/* Comedor */
+.imgComedor {
+    height: 60vh;
+    transition: 0.5s;
+    border-radius: 20px;
+    filter: brightness(70%);
+}
+
+.image-container:hover .imgComedor {
+    height: 65vh;
+    filter: brightness(50%);
+}
+
+/* Fin Comedor*/
+/* Sala privada*/
+.imgSalaPriv {
+    height: 33.3vh;
+    transition: 0.5s;
+    border-radius: 20px;
+    filter: brightness(70%);
+}
+
+.image-container:hover .imgSalaPriv {
+    height: 37vh;
+    filter: brightness(50%);
+}
+
+/* Fin sala privada*/
+/* Terraza*/
+.imgTerraza {
+    height: 44vh;
+    transition: 0.5s;
+    border-radius: 20px;
+    filter: brightness(70%);
+}
+
+.image-container:hover .imgTerraza {
+    height: 46.5vh;
+    filter: brightness(50%);
+}
+/* Fin Terraza*/
