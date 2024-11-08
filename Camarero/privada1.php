@@ -41,11 +41,11 @@
         // Configuración de las mesas con sus posiciones y etiquetas
         const mesasConfig = [
             { id=33, top: '14.5%', left: '13%', label: 'Mesa 1'},
-                {id=34,  top: '14.5%', left: '69%', label: 'Mesa 2'},
-                { id=35, top: '47%', left: '13%', label: 'Mesa 3'},
-                {id=36,  top: '47%', left: '69%', label: 'Mesa 4'},
-                {id=37,  top: '80%', left: '13%', label: 'Mesa 5'},
-                {id=38, top: '80%', left: '69%', label: 'Mesa 6'}
+                {id:34,  top: '14.5%', left: '69%', label: 'Mesa 2'},
+                { id:35, top: '47%', left: '13%', label: 'Mesa 3'},
+                {id:36,  top: '47%', left: '69%', label: 'Mesa 4'},
+                {id:37,  top: '80%', left: '13%', label: 'Mesa 5'},
+                {id:38, top: '80%', left: '69%', label: 'Mesa 6'}
 
         ];
 

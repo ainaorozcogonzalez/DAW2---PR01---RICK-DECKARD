@@ -40,10 +40,10 @@
     <script>
         // Configuración de las mesas con sus posiciones y etiquetas
         const mesasConfig = [
-                { id=29, top: '23%', left: '18%', label: 'Mesa 1' },
-                { id=30, top: '23%', left: '72%', label: 'Mesa 2'},
-                { id=31, top: '71%', left: '18%', label: 'Mesa 3'},
-                { id=32, top: '71%', left: '72%', label: 'Mesa 4',}
+                { id:29, top: '23%', left: '18%', label: 'Mesa 1' },
+                { id:30, top: '23%', left: '72%', label: 'Mesa 2'},
+                { id:31, top: '71%', left: '18%', label: 'Mesa 3'},
+                { id:32, top: '71%', left: '72%', label: 'Mesa 4',}
 
         ];
 
