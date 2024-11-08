@@ -1,3 +1,7 @@
+<?php
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -7,39 +11,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="./CSS/styles.css">
-    <script src="./Js/validaciones.js"></script>
+    <script src="./Js/validaciones.js" defer></script>
 </head>
 
 <body id="bodyLogIn">
 
     <div id="containerLogIn">
         <div class="left-section">
-            <form action="./validaciones/validacion.php" method="POST">
+            <form action="./validaciones/validacion.php" method="POST" autocomplete="off">
                 <div class="inputs">
                     <label class="labelLogIn" for="nombre">Usuario:</label>
-                    <input class="inputLogIn" type="text" class="form-control" id="nombre" name="nombre" placeholder="Introducir usuario" value="<?php if (isset($usuario)) {
-                    echo htmlspecialchars($usuario);
-                    } ?>">
-
-                    <br><span id="error-nombre" class="error-message"></span>
-                    <?php if (isset($_GET['usernameVacio'])) {echo "<p style='color: red;'>Debes ingresar un nombre de usuario</p>"; } ?>
-
+                    <input class="inputLogIn" type="text" id="nombre" name="nombre" placeholder="Introducir usuario" 
+                    value="<?php echo isset($_SESSION['nombre']) ? htmlspecialchars($_SESSION['nombre'], ENT_QUOTES, 'UTF-8') : ''; ?>">
+                    <span id="error-nombre" style="color: red;"></span> <!-- Aquí se mostrarán los errores -->
                 </div>
+
                 <div class="inputs">
                     <label class="labelLogIn" for="contraseña">Contraseña:</label>
-                    <input class="inputLogIn" type="password" class="form-control" id="contraseña" name="contrasena" placeholder="Introducir contraseña"">
-                    <br><span id="error-contraseña" class="error-message"><?php if (isset($errorContrasena)) {
-                    echo htmlspecialchars($errorContrasena);
-                    } ?></span>
-                    <br>
-                    <br><span id="error-nombre" class="error-message"><?php if (isset($errorUsuario)) {
-                    echo htmlspecialchars($errorUsuario);
-                    } ?></span>
-                    <?php if (isset($_GET['contrasenaVacio'])) {echo "<p style='color: red;'>Debes ingresar una contraseña</p>"; } ?>
-                    <?php if (isset($_GET['contrasenaMal']) || isset($_GET['usernameMal'])) {echo "<p style='color: red;'>El usuario o contraseña no son correctos</p>"; } ?>
-
+                    <input class="inputLogIn" type="password" id="contraseña" name="contrasena" placeholder="Introducir contraseña" autocomplete="off">
+                    <span id="error-contraseña" style="color: red;"></span> <!-- Aquí se mostrarán los errores -->
                 </div>
+
                 <button type="submit" name="login" class="botonLogIn">Iniciar sesión</button>
+
+                <!-- Mensaje de error si las credenciales son incorrectas -->
+                <?php if (isset($_GET['error']) && $_GET['error'] == 'incorrecto') { ?>
+                    <p style="color: red;">Usuario o contraseña incorrectos</p>
+                <?php } ?>
             </form>
         </div>
 
