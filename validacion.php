@@ -41,7 +41,7 @@ if (validaCampoVacio($contrasena)){
 
 /* La variable 'sql' hace una consulta donde: selecciona todo de la tabla 'tbl_usuarios' donde el usuario es igual a la variable '$user' y la contrasena igual a la variable '$contrasena' */ 
 $sql = "SELECT * FROM usuarios WHERE nombre_completo=?";
-$stmt = mysqli_prepare($conn, $sql);
+$stmt = mysqli_prepare($con, $sql);
 mysqli_stmt_bind_param($stmt, "s", $nombre);
 mysqli_stmt_execute($stmt);
 mysqli_stmt_store_result($stmt);

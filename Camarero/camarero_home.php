@@ -2,13 +2,32 @@
     include_once("../conexion.php");
     session_start();
 
-    if (!isset($_SESSION['loggedin']) && !isset($_SESSION['id_usuario'])) {
-        header('Location: ' . '../index.php');
-        exit();
-    } else {
-        $camareroActual = mysqli_real_escape_string($conn, htmlspecialchars($_SESSION['id_usuario']));
+    // if (!isset($_SESSION['id_usuario'])) {
 
-        
+    //     header('Location: ' . '../index.php');
+    //     exit();
+
+    // } else {
+
+        // $camareroActual = mysqli_real_escape_string($con, htmlspecialchars($_SESSION['id_usuario']));
+
+        $camareroActual = 1;
+
+
+        // SELECCIONAMOS todo DE 'mesas', JUNTAMOS con salas EN la id_sala,
+        // JUNTAMOS (LEFT JOIN) 'ocupaciones' EN la id_mesa Y en el caso que la fecha de liberación SEA NULA, O sea mayor que la fecha actual (la mesa sigue ocupada, o sigue ocupada pero se liberará en una fecha futura a la de ahora)
+        // JUNTAMOS (LEFT JOIN) 'usuarios' EN la id_usuario
+        // CUANDO el camarero de la ocupacion sea el mismo que el usuario de la sesión, o el camarero SEA NULO (las mesas que están ocupadas y las que no)
+        $sqlPáginaCamareros = "SELECT mesas.id_mesa, mesas.capacidad, mesas.estado, mesas.id_sala,
+        salas.id_sala, salas.nombre, salas.capacidad,
+        ocupaciones.id_ocupacion, ocupaciones.id_mesa, ocupaciones.fecha_ocupacion, ocupaciones.fecha_libera,
+        usuarios.id_usuario, usuarios.nombre_completo, usuarios.contraseña, usuarios.tipo_usuario
+        FROM mesas
+        INNER JOIN salas ON salas.id_sala = mesas.id_sala
+        LEFT JOIN ocupaciones ON ocupaciones.id_mesa = mesas.id_mesa AND (ocupaciones.fecha_libera IS NULL OR ocupaciones.fecha_libera > NOW())
+        LEFT JOIN usuarios ON usuarios.id_usuario = ocupaciones.id_usuario
+        WHERE ocupaciones.id_usuario = ? OR ocupaciones.id_usuario IS NULL
+        ORDER BY salas.id_sala, mesas.id_mesa";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -51,14 +70,14 @@
                         <ul class="dropdown-menu" aria-labelledby="terrazasDropdown">
                             <?php
                                 
-                                $sqlTerrazas = "SELECT * FROM salas WHERE id_sala <= 3";
-                                $stmtTerrazas = mysqli_prepare($conn, $sqlTerrazas);
+                                $sqlTerrazas = "SELECT * FROM salas WHERE tipo_sala = terraza";
+                                $stmtTerrazas = mysqli_prepare($con, $sqlTerrazas);
                                 mysqli_stmt_execute($stmtTerrazas);
                                 mysqli_stmt_store_result($stmtTerrazas);
 
                                 if (mysqli_stmt_num_rows($stmtTerrazas) > 0) {
 
-                                    mysqli_stmt_bind_result($stmtTerrazas, $id_sala, $nombre, $capacidad);
+                                    mysqli_stmt_bind_result($stmtTerrazas, $id_sala, $nombre, $capacidad, $tipo_sala);
 
                                     while (mysqli_stmt_fetch($stmtTerrazas)) {
                                         echo '<li><a class="dropdown-item" href="#" onclick="showImage(\'../img/' . htmlspecialchars($nombre) . '.jpg\')">' . htmlspecialchars($nombre) . '</a></li>';
@@ -66,6 +85,7 @@
 
                                 }
                                 
+
                             ?>
                         </ul>
                     </li>
@@ -77,8 +97,8 @@
                         <ul class="dropdown-menu" aria-labelledby="comedoresDropdown">
                             <?php
                                 
-                                $sqlTerrazas = "SELECT * FROM salas WHERE id_sala BETWEEN 4 AND 5";
-                                $stmtTerrazas = mysqli_prepare($conn, $sqlTerrazas);
+                                $sqlTerrazas = "SELECT * FROM salas WHERE tipo_sala = comedor";
+                                $stmtTerrazas = mysqli_prepare($con, $sqlTerrazas);
                                 mysqli_stmt_execute($stmtTerrazas);
                                 mysqli_stmt_store_result($stmtTerrazas);
 
@@ -103,8 +123,8 @@
                         <ul class="dropdown-menu" aria-labelledby="salasPrivadasDropdown">
                             <?php
                                 
-                                $sqlTerrazas = "SELECT * FROM salas WHERE id_sala BETWEEN 6 AND 8";
-                                $stmtTerrazas = mysqli_prepare($conn, $sqlTerrazas);
+                                $sqlTerrazas = "SELECT * FROM salas WHERE tipo_sala = sala privada";
+                                $stmtTerrazas = mysqli_prepare($con, $sqlTerrazas);
                                 mysqli_stmt_execute($stmtTerrazas);
                                 mysqli_stmt_store_result($stmtTerrazas);
 
@@ -127,21 +147,8 @@
     </nav>
 
     <?php
-        // SELECCIONAMOS todo DE 'mesas', JUNTAMOS con salas EN la id_sala,
-        // JUNTAMOS (LEFT JOIN) 'ocupaciones' EN la id_mesa Y en el caso que la fecha de liberación SEA NULA, O sea mayor que la fecha actual (la mesa sigue ocupada, o sigue ocupada pero se liberará en una fecha futura a la de ahora)
-        // JUNTAMOS (LEFT JOIN) 'usuarios' EN la id_usuario
-        // CUANDO el camarero de la ocupacion sea el mismo que el usuario de la sesión, o el camarero SEA NULO (las mesas que están ocupadas y las que no)
-        $sqlPáginaCamareros = "SELECT mesas.id_mesa, mesas.capacidad, mesas.estado, mesas.id_sala,
-        salas.id_sala, salas.nombre, salas.capacidad,
-        ocupaciones.id_ocupacion, ocupaciones.id_mesa, ocupaciones.fecha_ocupacion, ocupaciones.fecha_libera,
-        usuarios.id_usuario, usuarios.nombre_completo, usuarios.contraseña, usuarios.tipo_usuario
-        FROM mesas
-        INNER JOIN salas ON salas.id_sala = mesas.id_sala
-        LEFT JOIN ocupaciones ON ocupaciones.id_mesa = mesas.id_mesa AND (ocupaciones.fecha_libera IS NULL OR ocupaciones.fecha_libera > NOW())
-        LEFT JOIN usuarios ON usuarios.id_usuario = ocupaciones.id_usuario
-        WHERE ocupaciones.id_usuario = ? OR ocupaciones.id_usuario IS NULL
-        ORDER BY salas.id_sala, mesas.id_mesa";
-        $stmtPáginaCamareros = mysqli_prepare($conn, $sqlPáginaCamareros);
+
+        $stmtPáginaCamareros = mysqli_prepare($con, $sqlPáginaCamareros);
         mysqli_stmt_bind_param($stmtPáginaCamareros, "i", $camareroActual);
         mysqli_stmt_execute($stmtPáginaCamareros);
         mysqli_stmt_store_result($stmtPáginaCamareros);
@@ -196,5 +203,5 @@
 </body>
 </html>
 <?php
-    }
+    // } 
 ?>
