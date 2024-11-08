@@ -19,10 +19,13 @@
             position: absolute;
             padding: 5px 10px;
             border-radius: 5px;
-            background-color: #007bff;
+            background-color: #28a745; /* verde por defecto (libre) */
             color: white;
             border: none;
             cursor: pointer;
+        }
+        .mesa-button.ocupada {
+            background-color: #dc3545; /* rojo cuando está ocupada */
         }
     </style>
 </head>
@@ -35,29 +38,73 @@
     </div>
 
     <script>
+        // Configuración de las mesas con sus posiciones y etiquetas
         const mesasConfig = [
-            { top: '23%', left: '18%', label: 'Mesa 1', onclick: () => alert('Mesa 1 en Terraza 1') },
-            { top: '23%', left: '72%', label: 'Mesa 2', onclick: () => alert('Mesa 2 en Terraza 1') },
-            { top: '71%', left: '18%', label: 'Mesa 3', onclick: () => alert('Mesa 3 en Terraza 1') },
-            { top: '71%', left: '72%', label: 'Mesa 4', onclick: () => alert('Mesa 4 en Terraza 1') }
+            { id: 1, top: '23%', left: '18%', label: 'Mesa 1' },
+            { id: 2, top: '23%', left: '72%', label: 'Mesa 2' },
+            { id: 3, top: '71%', left: '18%', label: 'Mesa 3' },
+            { id: 4, top: '71%', left: '72%', label: 'Mesa 4' }
         ];
 
+        // Función para cargar los botones con su estado
         function loadButtons() {
             const buttonsContainer = document.getElementById('mesaButtonsContainer');
+            
             mesasConfig.forEach((mesa) => {
                 const button = document.createElement('button');
                 button.className = 'mesa-button';
                 button.style.top = mesa.top;
                 button.style.left = mesa.left;
                 button.innerText = mesa.label;
-                button.onclick = mesa.onclick;
+                button.setAttribute('data-id', mesa.id);  // Asignar ID de la mesa al botón
+
+                // Obtener el estado de la mesa desde la base de datos
+                fetch(`obtener_estado_mesa.php?id_mesa=${mesa.id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.estado === 'ocupada') {
+                            button.classList.add('ocupada');  // Cambiar a rojo
+                        }
+                    })
+                    .catch(error => console.error('Error al obtener el estado de la mesa:', error));
+
+                // Función al hacer clic en el botón
+                button.onclick = function() {
+                    toggleMesaState(mesa.id, button);
+                };
+
                 buttonsContainer.appendChild(button);
+            });
+        }
+
+        // Función para cambiar el estado de la mesa (ocupada o libre)
+        function toggleMesaState(id, button) {
+            const estado = button.classList.contains('ocupada') ? 'libre' : 'ocupada';
+            
+            // Actualizar el estado de la mesa en la base de datos
+            fetch('actualizar_estado_mesa.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded', // Usamos urlencoded
+                },
+                body: `id_mesa=${id}&estado=${estado}` // Enviamos los datos por POST
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (estado === 'ocupada') {
+                    button.classList.add('ocupada'); // Cambiar a rojo
+                } else {
+                    button.classList.remove('ocupada'); // Cambiar a verde
+                }
+                console.log(data.message);
+            })
+            .catch(error => {
+                console.error('Error al actualizar el estado de la mesa:', error);
             });
         }
 
         document.addEventListener("DOMContentLoaded", loadButtons);
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-7r82R3sMKeU9DAStBbXzTc98O/YMNZ4eF9NLMb13K3uqo/W9Y5Hk4HaeQOG99UZ3" crossorigin="anonymous"></script>
 </body>
 </html>
