@@ -44,6 +44,7 @@ CREATE TABLE `db_restaurante`.`ocupaciones` (
   `id_ocupacion` INT NOT NULL AUTO_INCREMENT,
   `id_mesa` INT NULL,
   `id_usuario` INT NULL,
+  `sillas` INT NULL,
   `fecha_ocupacion` DATETIME NOT NULL,
   `fecha_libera` DATETIME NULL,
   PRIMARY KEY (`id_ocupacion`),
