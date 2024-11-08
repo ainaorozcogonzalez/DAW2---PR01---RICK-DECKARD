@@ -95,35 +95,27 @@
                 }
         }
 
-        // Añadir condiciones de búsqueda condicionalmente
-        $conditions = [];
-        $params = [];
+        $buscarSala = '%' . $buscar_sala . '%';
+        $buscarFecha = '%' . $fecha . '%';
 
         if ($buscar_sala != "") {
-            $conditions[] = "salas.nombre LIKE ?";
-            $params[] = '%' . $buscar_sala . '%';
+            // Ejecuta la consulta y guarda los resultados
+            $stmtPáginaHistorial = mysqli_prepare($con, $sqlHistorial);
+            mysqli_stmt_bind_param($stmtPáginaHistorial, "s", $buscarSala);
+            mysqli_stmt_execute($stmtPáginaHistorial);
+            $resultado = mysqli_stmt_get_result($stmtPáginaHistorial);
         }
 
         if ($fecha != "") {
-            $conditions[] = "ocupaciones.fecha_ocupacion LIKE ?";
-            $params[] = '%' . $fecha . '%';
+            // Ejecuta la consulta y guarda los resultados
+            $stmtPáginaHistorial = mysqli_prepare($con, $sqlHistorial);
+            mysqli_stmt_bind_param($stmtPáginaHistorial, "s", $buscarFecha);
+            mysqli_stmt_execute($stmtPáginaHistorial);
+            $resultado = mysqli_stmt_get_result($stmtPáginaHistorial);
         }
 
-        // Si hay condiciones, añadirlas a la consulta
-        if (!empty($conditions)) {
-            $sqlHistorial .= " WHERE " . implode(" AND ", $conditions);
-        }
-
-        $sqlHistorial .= " ORDER BY salas.id_sala, mesas.id_mesa";
-
-        // Preparar y ejecutar la consulta con los parámetros
+        // Ejecuta la consulta y guarda los resultados
         $stmtPáginaHistorial = mysqli_prepare($con, $sqlHistorial);
-
-        if ($params) {
-            $types = str_repeat('s', count($params));  // Tipo de parámetros (todos son strings aquí)
-            mysqli_stmt_bind_param($stmtPáginaHistorial, $types, ...$params);
-        }
-
         mysqli_stmt_execute($stmtPáginaHistorial);
         $resultado = mysqli_stmt_get_result($stmtPáginaHistorial);
 
