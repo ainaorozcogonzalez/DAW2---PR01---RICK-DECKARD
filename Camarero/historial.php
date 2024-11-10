@@ -10,15 +10,22 @@
 
     } else {
 
+        // Recojemos el valor de la sesión 'id_usuario' y lo guardamos en una variable
         $camareroActual = mysqli_real_escape_string($con, htmlspecialchars($_SESSION['id_usuario']));
+
+        // Recojemos el valor del input para filtrar por sala y el valor del input para filtrar por fecha
         $buscar_sala = isset($_GET['buscar']) ? mysqli_real_escape_string($con, htmlspecialchars($_GET['buscar'])) : '';
         $fecha = isset($_GET['fecha']) ? mysqli_real_escape_string($con, htmlspecialchars($_GET['fecha'])) : '';
 
-        // Verifica si se ha seleccionado algún filtro a través del parámetro `filtro`
-        $filtro = isset($_GET['filtro']) ? $_GET['filtro'] : 'default';
+        // Comprobamos si se se recibe el valor de 'pagina', si se recibe, lo recojemos, sino nos lleva a 'Historial Mesas'
+        $paginas = isset($_GET['pagina']) ? $_GET['pagina'] : 'default';
 
-        // Configura la consulta SQL en función del filtro seleccionado
-        switch ($filtro) {
+        // Creamos una variable, que más tarde comprobará si la consulta que estamos creando ya tiene un ORDER BY definido
+        // Esto lo hacemos porque, más tarde (cuando filtremos), añadiremos un ORDER BY a la consulta para ordenar por 'id_mesa' e 'id_sala'
+        $tieneORDERBY = false;
+
+        // CAMBIAR ENTRE PÁGINAS (OCUPACIONES / SALAS / SALAS MÁS USADAS / HISTORIAL MESAS)
+        switch ($paginas) {
 
             case 'ocupacion':
 
@@ -28,7 +35,10 @@
                     usuarios.contraseña, usuarios.tipo_usuario
                     FROM ocupaciones
                     INNER JOIN mesas ON mesas.id_mesa = ocupaciones.id_mesa
+                    INNER JOIN salas ON salas.id_sala = mesas.id_sala
                     INNER JOIN usuarios ON usuarios.id_usuario = ocupaciones.id_usuario";
+
+                $tieneORDERBY = false;
                 break;
 
             case 'sala':
@@ -37,6 +47,8 @@
                     mesas.id_mesa, mesas.capacidad AS capacidad_mesa, mesas.estado, mesas.id_sala
                     FROM salas
                     INNER JOIN mesas ON salas.id_sala = mesas.id_sala";
+
+                $tieneORDERBY = false;
                 break;
 
             case 'uso':
@@ -49,6 +61,8 @@
                     INNER JOIN salas ON salas.id_sala = mesas.id_sala
                     GROUP BY ocupaciones.id_mesa
                     ORDER BY numero_de_usos DESC";
+
+                $tieneORDERBY = true;
                 break;
 
             default:
@@ -61,61 +75,53 @@
                     INNER JOIN salas ON salas.id_sala = mesas.id_sala
                     LEFT JOIN ocupaciones ON ocupaciones.id_mesa = mesas.id_mesa
                     LEFT JOIN usuarios ON usuarios.id_usuario = ocupaciones.id_usuario 
-                    ORDER BY salas.id_sala, mesas.id_mesa";
+                    ";
+
+                $tieneORDERBY = false;
                 break;
-
-                if ($buscar_sala != "") {
-
-                    $sqlHistorial = "SELECT mesas.id_mesa AS id_mesa, mesas.capacidad, mesas.estado, mesas.id_sala,
-                    salas.id_sala, salas.nombre, salas.capacidad,
-                    ocupaciones.id_ocupacion, ocupaciones.id_mesa AS id_mesas_ocupadas, ocupaciones.fecha_ocupacion, ocupaciones.fecha_libera,
-                    usuarios.id_usuario, usuarios.nombre_completo, usuarios.contraseña, usuarios.tipo_usuario
-                    FROM mesas
-                    INNER JOIN salas ON salas.id_sala = mesas.id_sala
-                    LEFT JOIN ocupaciones ON ocupaciones.id_mesa = mesas.id_mesa
-                    LEFT JOIN usuarios ON usuarios.id_usuario = ocupaciones.id_usuario
-                    WHERE salas.nombre LIKE ?
-                    ORDER BY salas.id_sala, mesas.id_mesa;";
-
-                }
-
-                if ($fecha != "") {
-
-                    $sqlHistorial .= "SELECT mesas.id_mesa AS id_mesa, mesas.capacidad, mesas.estado, mesas.id_sala,
-                    salas.id_sala, salas.nombre, salas.capacidad,
-                    ocupaciones.id_ocupacion, ocupaciones.id_mesa AS id_mesas_ocupadas, ocupaciones.fecha_ocupacion, ocupaciones.fecha_libera,
-                    usuarios.id_usuario, usuarios.nombre_completo, usuarios.contraseña, usuarios.tipo_usuario
-                    FROM mesas
-                    INNER JOIN salas ON salas.id_sala = mesas.id_sala
-                    LEFT JOIN ocupaciones ON ocupaciones.id_mesa = mesas.id_mesa
-                    LEFT JOIN usuarios ON usuarios.id_usuario = ocupaciones.id_usuario
-                    WHERE ocupaciones.fecha_ocupacion LIKE ?
-                    ORDER BY salas.id_sala, mesas.id_mesa;";
-                    
-                }
         }
 
-        $buscarSala = '%' . $buscar_sala . '%';
-        $buscarFecha = '%' . $fecha . '%';
+        // AÑADIMOS LOS FILTROS
 
+        // Creamos una variable (array) para los filtros y otra para los parametros
+        // (filtrará todas las letras/números que estén en los filtros)
+        $filtros = [];
+        $parametros = [];
+
+        // Si hemos introducido texto en el input 'buscar'
         if ($buscar_sala != "") {
-            // Ejecuta la consulta y guarda los resultados
-            $stmtPáginaHistorial = mysqli_prepare($con, $sqlHistorial);
-            mysqli_stmt_bind_param($stmtPáginaHistorial, "s", $buscarSala);
-            mysqli_stmt_execute($stmtPáginaHistorial);
-            $resultado = mysqli_stmt_get_result($stmtPáginaHistorial);
+            $filtros[] = "salas.nombre LIKE ?";
+            $parametros[] = '%' . $buscar_sala . '%';
         }
 
+        // Si hemos introducido una fecha en el input 'fecha'
         if ($fecha != "") {
-            // Ejecuta la consulta y guarda los resultados
-            $stmtPáginaHistorial = mysqli_prepare($con, $sqlHistorial);
-            mysqli_stmt_bind_param($stmtPáginaHistorial, "s", $buscarFecha);
-            mysqli_stmt_execute($stmtPáginaHistorial);
-            $resultado = mysqli_stmt_get_result($stmtPáginaHistorial);
+            $filtros[] = "ocupaciones.fecha_ocupacion LIKE ?";
+            $parametros[] = '%' . $fecha . '%';
         }
 
-        // Ejecuta la consulta y guarda los resultados
+        // Si hay filtros, los añadimos a la consulta
+        if (!empty($filtros)) {
+            $sqlHistorial .= " WHERE " . implode(" AND ", $filtros);
+        }
+
+        // Comprobamos si la consulta que tenemos actualmente (dependiendo de en que página estemos)
+        if (!$tieneORDERBY) {
+            $sqlHistorial .= " ORDER BY salas.id_sala, mesas.id_mesa";
+        }
+
+        // Preparamos y ejecutamos la consulta
         $stmtPáginaHistorial = mysqli_prepare($con, $sqlHistorial);
+
+        // Si los parámetros no están vacíos (si contiene valores),
+        // generamos una cadena y le decimos que cada parámetro es una cadena de texto ('s').
+        // Asociamos la cadena anterior a la consulta con todos los parámetros
+        if ($parametros) {
+            $tiposParametros = str_repeat('s', count($parametros));
+            mysqli_stmt_bind_param($stmtPáginaHistorial, $tiposParametros, ...$parametros);
+        }
+
+        // Ejecutamos la consulta y creamos una variable "resultado" que guarda la consulta en esta
         mysqli_stmt_execute($stmtPáginaHistorial);
         $resultado = mysqli_stmt_get_result($stmtPáginaHistorial);
 
@@ -130,38 +136,59 @@
     <title>Gestión de Mesas</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.css" rel="stylesheet"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.15.2/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">LOGO</a>
+
+            <!-- Logo de la empresa -->
+            <a class="" href="#">
+                <img src="../img/LOGO-sinFondo.png" alt="logo" style="width: 7%;">
+            </a>
+
+            <!-- Botón para hacer el navbar responsive (mete todos los elementos en un responsive) -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
+            <!-- FILTROS Y PÁGINAS -->
             <div class="collapse navbar-collapse" id="navbarContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <form class="form-inline my-2 my-lg-0" method="GET">
-                        <input class="form-control mr-sm-2" type="search" name="buscar" placeholder="Buscar" aria-label="Buscar">
-                    </form>
-                    <form style="margin-left: 10px; margin-right: 10px;" method="GET"> 
-                        <input style="color: #000000A6;" class="form-control mr-sm-2" type="date" id="start" name="fecha" value="0000-00-00"/>
-                    </form>
+
+                    <!-- Los filtros solo se mostrarán en la página de 'Historial Mesas' -->
+                    <?php if ($paginas != 'ocupacion' && $paginas != 'uso' && $paginas != 'sala') : ?>
+                        <form class="form-inline my-2 my-lg-0" method="GET">
+                            <input class="form-control mr-sm-2" type="search" name="buscar" placeholder="Buscar Sala..." aria-label="Buscar Sala...">
+                        </form>
+                        <form class="d-flex align-items-center" style="margin-left: 10px; margin-right: 10px;" method="GET">
+                            <input style="color: #000000A6; width: 150px;" class="form-control me-2" type="date" id="start" name="fecha"/>
+                            <button type="submit" class="btn btn-primary" style="height: 93%;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="26" fill="currentColor" class="bi bi-calendar2-check-fill" viewBox="0 1.4 16 16">
+                                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5m9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5m-2.6 5.854a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z"/>
+                                </svg>
+                            </button>
+                        </form>
+                    <?php endif; ?>
+
+                    <!-- Página Historial Mesas (predeterminada) -->
                     <li class="nav-item">
-                        <a class="nav-link" href="?filtro=default">Historial Mesas</a>
+                        <a class="nav-link" href="?pagina=default">Historial Mesas</a>
                     </li>
+
+                    <!-- Página Ocupaciones -->
                     <li class="nav-item">
-                        <a class="nav-link" href="?filtro=ocupacion">Ocupaciones</a>
+                        <a class="nav-link" href="?pagina=ocupacion">Ocupaciones</a>
                     </li>
+
+                    <!-- Página Salas -->
                     <li class="nav-item">
-                        <a class="nav-link" href="?filtro=sala">Salas</a>
+                        <a class="nav-link" href="?pagina=sala">Salas</a>
                     </li>
+
+                    <!-- Página Mesas más usadas -->
                     <li class="nav-item">
-                        <a class="nav-link" href="?filtro=uso">Mesas más usadas</a>
+                        <a class="nav-link" href="?pagina=uso">Mesas más usadas</a>
                     </li>
                 </ul>
             </div>
@@ -170,20 +197,22 @@
 
     <div class="container mt-4">
 
-        <?php if ($filtro == 'ocupacion') : ?>
+        <!-- Dependiendo de que opción escojamos en el navbar, nos mostrará una página u otra -->
+        <?php if ($paginas == 'ocupacion') : ?>
             <h2>Ocupaciones</h2>
-        <?php elseif ($filtro == 'uso') : ?>
+        <?php elseif ($paginas == 'uso') : ?>
             <h2>Mesas más usadas a menos</h2>
-        <?php elseif ($filtro == 'sala') : ?>
+        <?php elseif ($paginas == 'sala') : ?>
             <h2>Salas</h2>
         <?php else : ?>
             <h2>Historial mesas</h2>
         <?php endif; ?>
         
+        <!-- Creamos la tabla, y dependiendo de que opción hayamos escojido, creamos un encabezado (para las columnas) u otro -->
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <?php if ($filtro == 'ocupacion') : ?>
+                    <?php if ($paginas == 'ocupacion') : ?>
 
                         <th>Ocupación</th>
                         <th>Mesa</th>
@@ -192,14 +221,14 @@
                         <th>Fecha ocupación</th>
                         <th>Fecha liberación</th>
 
-                    <?php elseif ($filtro == 'uso') : ?>
+                    <?php elseif ($paginas == 'uso') : ?>
 
                         <th>Número de Usos</th>
                         <th>Mesa</th>
                         <th>Salas</th>
                         <th>Ocupaciones</th>
 
-                    <?php elseif ($filtro == 'sala') : ?>
+                    <?php elseif ($paginas == 'sala') : ?>
 
                         <th>Nombre Sala</th>
                         <th>Capacidad Sala</th>
@@ -220,18 +249,21 @@
             <tbody>
                 <?php
 
-                    // Si existe $resultado y devuelve filas
+                    // Si existe $resultado y devuelve filas, entonces
                     if ($resultado && mysqli_num_rows($resultado) > 0) {
 
+                        // Recoje las filas y las guarda una una variable (por cada una), llamada $fila
+                        // , para mostrar los datos de la tabla
                         while ($fila = mysqli_fetch_assoc($resultado)) {
 
 
                             echo "<tr>";
 
-
                             // MOSTRAR OCUPACIONES
-                            if ($filtro == 'ocupacion') {
+                            if ($paginas == 'ocupacion') {
 
+                                // Si esta mesa ha sido ocupada (si existe 'id_ocupacion') mostramos 'Ocupación (y su ID)'
+                                // si no, mostramos un mensaje de que aún no ha sido ocupada
                                 if ($fila['id_ocupacion'] != NULL) {
 
                                     echo "<td>Ocupación ".$fila['id_ocupacion']."</td>";
@@ -242,9 +274,12 @@
 
                                 }
                                 
+                                // Mostramos las mesas y su estado actual
                                 echo "<td>Mesa ".$fila['id_mesa']."</td>";
                                 echo "<td>".$fila['estado']."</td>";
 
+                                // Si esta mesa ha sido asignada por un camarero (si existe una id_usuario),
+                                // mostramos el nombre de este, si no, le mostramos un mensaje de que ningún camarero la ha asignado
                                 if ($fila['id_usuario'] != NULL) {
 
                                     echo "<td>".$fila['nombre_completo']."</td>";
@@ -255,8 +290,11 @@
 
                                 }
 
+                                // Mostramos la fecha en la que se ha ocupado la mesa
                                 echo "<td>".$fila['fecha_ocupacion']."</td>";
 
+                                // Si la fecha en la que se ha desocupado existe, la mostramos
+                                // Si no, mostramos un mensaje de que sigue ocupada
                                 if ($fila['fecha_libera'] != NULL) {
 
                                     echo "<td>".$fila['fecha_libera']."</td>";
@@ -269,8 +307,9 @@
                                 
 
                             // MOSTRAR DE LAS MESAS MÁS USADAS A MENOS
-                            } elseif ($filtro == 'uso') {
+                            } elseif ($paginas == 'uso') {
 
+                                // Si solo se ha usado una vez, mostramos (el número de veces, y el texto 'vez')
                                 if ($fila['numero_de_usos'] == 1) {
 
                                     echo "<td>".$fila['numero_de_usos']." vez</td>";
@@ -281,22 +320,24 @@
 
                                 }
                                 
-                                echo "<td>Mesa ".$fila['id_mesa']."</td>";
-
-                                
+                                // Mostramos las mesas y el nombre de la sala en la que están
+                                echo "<td>Mesa ".$fila['id_mesa']."</td>";                                
                                 echo "<td>".$fila['nombre']."</td>";
 
+                                // Mostramos las ocupaciones en las que se ha usado esta mesa 
                                 echo "<td>";
 
-                                    // Busca todas las comas en el string de las ocupaciones concatenadas y lo reemplaza por ', Ocupación '
+                                    // Buscamos todas las comas en la cadena 'ocupaciones_concatenadas' y lo reemplaza por ', Ocupación '
+                                    // de manera que queda "Ocupación 1, Ocupación 2, Ocupación 3, etc..."
                                     echo "Ocupación " . str_replace(',', ', Ocupación ', $fila['ocupaciones_concatenadas']);
 
                                 echo "</td>";
 
 
                             // MOSTRAR SALAS
-                            } elseif ($filtro == 'sala') {
+                            } elseif ($paginas == 'sala') {
 
+                                // Mostramos el nombre de la sala y su capacidad
                                 echo "<td>".$fila['nombre']."</td>";
                                 echo "<td>".$fila['capacidad']."</td>";
 
@@ -304,17 +345,19 @@
                             // MOSTRAR TANTO LAS MESAS OCUPADAS Y NO OCUPADAS
                             } else {
 
+                                // Si esta mesa ha sido ocupada (si existe 'id_ocupacion') mostramos 'Ocupación (y su ID)'
+                                // si no, mostramos un mensaje de que aún no ha sido ocupada
                                 if ($fila['id_ocupacion'] != NULL) {
 
                                     echo "<td style='width: 22%;' >Ocupación ".$fila['id_ocupacion']."</td>";
 
                                 } else {
 
-                                    echo "<td style='width: 22%;'>Esta mesa aún no ha sido ocupada</td>";
+                                    echo "<td style='width: 22%;'>Esta mesa aún no se ha ocupado</td>";
 
                                 }
                                 
-                                // Si la ID de esta mesa está ocupada, mostraremos la ID de la mesa desde la tabla 'ocupaciones',
+                                // Si la ID de esta mesa está ocupada, mostraremos la ID de la mesa desde la tabla 'ocupaciones' ('id_mesas_ocupadas'),
                                 // Si no lo está, mostraremos la ID de la mesa de la tabla 'mesas'
                                 if ($fila['id_mesas_ocupadas'] != NULL) {
 
@@ -326,10 +369,12 @@
                                     
                                 }
 
+                                // Mostramos el nombre de la sala y su estado actual
                                 echo "<td>".$fila['nombre']."</td>";
-
                                 echo "<td>".$fila['estado']."</td>";
 
+                                // Si esta mesa ha sido asignada por un camarero (si existe una id_usuario),
+                                // mostramos el nombre de este, si no, le mostramos un mensaje de que ningún camarero la ha asignado
                                 if ($fila['id_usuario'] != NULL) {
 
                                     echo "<td style='width: 25%;'>".$fila['nombre_completo']."</td>";
@@ -340,14 +385,15 @@
 
                                 }
 
-
+                                // Si la mesa se ha ocupado (la fecha de ocupación existe), la mostramos,
+                                // Si no, mostramos un mensaje  de que a
                                 if ($fila['fecha_ocupacion'] != NULL) {
                                     
                                     echo "<td style='width: 20%;'>".$fila['fecha_ocupacion']."</td>";
 
                                 } else {
 
-                                    echo "<td style='width: 20%;'> Esta mesa aún no se ha ocupado </td>";
+                                    echo "<td style='width: 20%;'> Esta mesa aún no ha sido ocupada</td>";
                                     
                                 }
                                 
