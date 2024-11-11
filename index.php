@@ -23,12 +23,14 @@ session_start();
                     <label class="labelLogIn" for="nombre">Usuario:</label>
                     <input class="inputLogIn" type="text" id="nombre" name="nombre" placeholder="Introducir usuario" 
                     value="<?php echo isset($_SESSION['nombre']) ? htmlspecialchars($_SESSION['nombre'], ENT_QUOTES, 'UTF-8') : ''; ?>">
+                    <br>
                     <span id="error-nombre" style="color: red;"></span> <!-- Aquí se mostrarán los errores -->
                 </div>
 
                 <div class="inputs">
                     <label class="labelLogIn" for="contraseña">Contraseña:</label>
                     <input class="inputLogIn" type="password" id="contraseña" name="contrasena" placeholder="Introducir contraseña" autocomplete="off">
+                     <br>
                     <span id="error-contraseña" style="color: red;"></span> <!-- Aquí se mostrarán los errores -->
                 </div>
 
