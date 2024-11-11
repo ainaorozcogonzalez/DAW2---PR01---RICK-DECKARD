@@ -23,7 +23,7 @@ if (!isset($_SESSION['nombre'])) {
             <a href="./manager_home.php">
                 <img id="LogoNav" src="../img/LOGO-REST.png" />
             </a>
-            <div id="collapse" class="collapse navbar-collapse" id="navbarButtonsExample">
+            <div class="collapse navbar-collapse" id="navbarButtonsExample">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" href="./manager_home.php">Inicio</a>
