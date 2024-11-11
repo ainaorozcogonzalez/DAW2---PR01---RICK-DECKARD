@@ -6,12 +6,8 @@
     <title>Comedor 1</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<<<<<<< HEAD
-    <link rel="stylesheet" href="./CSS/salas.css">
 
-=======
-    <link rel="stylesheet" href="../CSS/styles.css">
->>>>>>> 4cfbeb2148c0cf4e582d5dac8e9d935281c5aa84
+
 </head>
 <body>
 
