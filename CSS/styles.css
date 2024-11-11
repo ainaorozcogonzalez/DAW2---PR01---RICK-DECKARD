@@ -142,7 +142,6 @@
     object-fit: contain;
 }
 
-/* Responsive design: when screen size is smaller, adjust layout */
 @media (max-width: 700px) {
     #containerLogIn {
         flex-direction: column;
@@ -194,18 +193,18 @@
     filter: brightness(70%);
 }
 
-.image-container:hover .imgMan {
+.image-containerMan:hover .imgMan {
     height: 46.5vh;
     filter: brightness(50%);
 }
 
-.image-container {
+.image-containerMan {
     position: relative;
     display: inline-block;
     overflow: hidden;
 }
 
-.image-container:hover .text-overlay {
+.image-containerMan:hover .text-overlay {
     opacity: 1;
 }
 
@@ -320,6 +319,36 @@ nav {
 }
 
 /* Fin Nav*/
+/* Inicio Salas Mesas*/
+.image-container {
+    position: relative;
+    text-align: center;
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+}
+
+.mesa-button {
+    position: absolute;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: #28a745;
+    /* verde por defecto (libre) */
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.mesa-button.ocupada {
+    background-color: #dc3545;
+    /* rojo cuando está ocupada */
+}
+
+/* Fin Salas Mesas*/
 
 @media (max-width: 800px) {
     #bodyMan {
