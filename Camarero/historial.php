@@ -53,7 +53,7 @@
 
             case 'uso':
 
-                $sqlHistorial = "SELECT  ocupaciones.id_mesa, COUNT(ocupaciones.id_mesa) AS numero_de_usos, 
+                $sqlHistorial = "SELECT ocupaciones.id_mesa, COUNT(ocupaciones.id_mesa) AS numero_de_usos, 
                     GROUP_CONCAT(ocupaciones.id_ocupacion) AS ocupaciones_concatenadas, mesas.capacidad, mesas.estado, mesas.id_sala,
                     salas.id_sala, salas.nombre, salas.capacidad
                     FROM ocupaciones
