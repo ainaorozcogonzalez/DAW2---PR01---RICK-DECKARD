@@ -17,6 +17,7 @@
         <div id="mesaButtonsContainer"></div>
     </div>
 
+    
     <script>
         // Configuración de las mesas con sus posiciones y etiquetas
         const mesasConfig = [
