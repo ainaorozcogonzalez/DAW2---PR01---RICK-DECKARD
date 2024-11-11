@@ -37,6 +37,9 @@ if (!isset($_SESSION['nombre'])) {
                         Cerrar sesión
                     </a>
                 </div>
+                <div class="button-container">
+                    <button onclick="window.location.href = 'historial.php';" class="btn btn-primary me-3">Ver Historial</button>
+                </div>
             </div>
         </div>
     </nav>
