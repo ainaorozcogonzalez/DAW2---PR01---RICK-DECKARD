@@ -9,6 +9,12 @@
 </head>
 
 <body id="bodyMan">
+
+    <!-- Botón para ir a historial.php -->
+    <div class="button-container">
+        <button onclick="window.location.href = 'historial.php';" class="historialBtn">Ver Historial</button>
+    </div>
+
     <div id="ocultarImg" class="">
         <div class="column-1">
             <h1 id="h1Sel">Seleccionar sala</h1>
@@ -32,8 +38,8 @@
             </div>
         </div>
     </div>
-    <!-- Mostrar Comedores -->
 
+    <!-- Mostrar Comedores -->
     <div id="Comedores" class="content">
         <div class="column-1 flex">
             <div>
@@ -55,8 +61,8 @@
         <div class="column-1 flex">
             <button id="volverComedor" class="volverBtn">Volver</button>
         </div>
-
     </div>
+
     <!-- Mostrar Salas Privadas -->
     <div id="Privadas" class="content">
         <div class="column-1">
@@ -94,6 +100,7 @@
             <button id="volverPrivada" class="volverBtn">Volver</button>
         </div>
     </div>
+
     <!-- Mostrar Terrazas -->
     <div id="Terrazas" class="content">
         <div class="column-1">
@@ -123,7 +130,6 @@
     </div>
 
     <script src="../Js/MostMesas.js"></script>
-
 </body>
 
 </html>
