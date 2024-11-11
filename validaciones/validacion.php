@@ -24,6 +24,7 @@ if ($resultado && mysqli_num_rows($resultado) > 0) {
     if (password_verify($contrasena, $fila['contraseña'])) {
         // Almacenar el id_usuario en la sesión
         $_SESSION['id_usuario'] = $fila['id_usuario'];
+        $_SESSION['nombre'] = $_POST['nombre'];
 
         // Redirigir según el tipo de usuario
         if ($fila['tipo_usuario'] === 'camarero') {

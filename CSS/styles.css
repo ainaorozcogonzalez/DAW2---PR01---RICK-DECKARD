@@ -225,7 +225,9 @@
 
 #h1Sel {
     text-align: center;
-    padding-bottom: 10vh;
+    padding-bottom: 3vh;
+    padding-top: 3vh;
+    color: white;
 }
 
 .content {
@@ -297,8 +299,29 @@
 }
 
 /* Fin Terraza*/
+/* Inicio Nav*/
+nav #LogoNav {
+    height: 50px;
+}
 
-@media (max-width: 767px) {
+/* Estilo de la navbar con fondo negro */
+nav {
+    background-color: white !important;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#divSession {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
+/* Fin Nav*/
+
+@media (max-width: 800px) {
     #bodyMan {
         margin: 3vh;
     }
@@ -318,14 +341,11 @@
 
     #h1Sel {
         font-size: 2.5em;
+        color: white;
     }
 
     .text-overlay {
-        font-size: 2em; 
+        font-size: 2em;
         opacity: 1;
-    }
-
-    .volverBtn {
-        font-size: 1.5em;
     }
 }
