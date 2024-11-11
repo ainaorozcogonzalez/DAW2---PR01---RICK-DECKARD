@@ -33,22 +33,22 @@
 
     <!-- Contenedor para mostrar la imagen y los botones de las mesas -->
     <div class="image-container">
-        <img id="displayedImage" src="../img/comedor1.jpg" alt="Terraza 1">
+        <img id="displayedImage" src="../img/priv3.jpg" alt="Terraza 1">
         <div id="mesaButtonsContainer"></div>
     </div>
 
     <script>
         // Configuración de las mesas con sus posiciones y etiquetas
         const mesasConfig = [
-            { id=43, top: '16.5%', left: '10%', label: 'Mesa 1'},
-                { id=44,top: '16.5%', left: '45%', label: 'Mesa 2'},
-                { id=45,top: '16.5%', left: '79%', label: 'Mesa 3'},
-                {id=46, top: '47%', left: '10%', label: 'Mesa 4'},
-                { id=47,top: '47%', left: '45%', label: 'Mesa 5'},
-                { id=48,top: '47%', left: '79%', label: 'Mesa 6'},
-                {id=49, top: '76%', left: '10%', label: 'Mesa 7'},
-                { id=50, top: '76%', left: '45%', label: 'Mesa 8'},
-                { id=51, top: '76%', left: '79%', label: 'Mesa 9'}
+                { id:43, top: '16.5%', left: '10%', label: 'Mesa 1'},
+                { id:44,top: '16.5%', left: '45%', label: 'Mesa 2'},
+                { id:45,top: '16.5%', left: '79%', label: 'Mesa 3'},
+                {id:46, top: '47%', left: '10%', label: 'Mesa 4'},
+                { id:47,top: '47%', left: '45%', label: 'Mesa 5'},
+                { id:48,top: '47%', left: '79%', label: 'Mesa 6'},
+                {id:49, top: '76%', left: '10%', label: 'Mesa 7'},
+                { id:50, top: '76%', left: '45%', label: 'Mesa 8'},
+                { id:51, top: '76%', left: '79%', label: 'Mesa 9'}
 
         ];
 
