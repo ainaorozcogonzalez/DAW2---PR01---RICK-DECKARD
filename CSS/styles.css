@@ -301,21 +301,45 @@
 /* Inicio Nav*/
 nav #LogoNav {
     height: 50px;
+    cursor: pointer;
+    /* Indica que es un botón */
 }
 
-/* Estilo de la navbar con fondo negro */
+/* Fondo de la navbar */
 nav {
-    background-color: white !important;
+    background-color: white;
     border-radius: 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
+/* Alinear el nombre de sesión al centro en pantallas grandes */
 #divSession {
     flex-grow: 1;
     display: flex;
     justify-content: center;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 800px) {
+
+    /* Cambiar tamaño del logo en pantallas pequeñas */
+    nav #LogoNav {
+        height: 40px;
+    }
+
+    
+
+    /* Ajustes del menú en pantallas pequeñas */
+    .navbar-collapse {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .navbar-nav {
+        margin-right: 10px;
+    }
 }
 
 /* Fin Nav*/
@@ -341,6 +365,14 @@ nav {
     color: white;
     border: none;
     cursor: pointer;
+}
+
+.image-containerMes {
+    position: relative;
+    text-align: center;
+    margin-top: 20px;
+    display: inline-block;
+    margin-left: 27%;
 }
 
 .mesa-button.ocupada {
@@ -376,5 +408,18 @@ nav {
     .text-overlay {
         font-size: 2em;
         opacity: 1;
+    }
+
+    .image-containerMes {
+        position: relative;
+        text-align: center;
+        margin-top: 20px;
+        display: inline-block;
+        margin-left: 0%;
+        max-width: 100%;
+    }
+
+    #displayedImage {
+        max-width: 100%;
     }
 }
