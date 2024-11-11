@@ -33,14 +33,14 @@
 
     <!-- Contenedor para mostrar la imagen y los botones de las mesas -->
     <div class="image-container">
-        <img id="displayedImage" src="../img/privada3.jpg" alt="Terraza 1">
+        <img id="displayedImage" src="../img/priv3.jpg" alt="Terraza 1">
         <div id="mesaButtonsContainer"></div>
     </div>
 
     <script>
         // Configuración de las mesas con sus posiciones y etiquetas
         const mesasConfig = [
-            { id:43, top: '16.5%', left: '10%', label: 'Mesa 1'},
+                { id:43, top: '16.5%', left: '10%', label: 'Mesa 1'},
                 { id:44,top: '16.5%', left: '45%', label: 'Mesa 2'},
                 { id:45,top: '16.5%', left: '79%', label: 'Mesa 3'},
                 {id:46, top: '47%', left: '10%', label: 'Mesa 4'},
