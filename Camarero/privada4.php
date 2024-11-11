@@ -1,5 +1,13 @@
+<?php
+session_start();
+if (!isset($_SESSION['nombre'])) {
+    header("Location: ../index.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +16,35 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="../CSS/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.0/mdb.min.css" rel="stylesheet">
 </head>
-<body>
 
+<body id="bodyGen">
+    <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+        <div class="container">
+            <a href="./manager_home.php">
+                <img id="LogoNav" src="../img/LOGO-REST.png" />
+            </a>
+            <div class="collapse navbar-collapse" id="navbarButtonsExample">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./manager_home.php">Inicio</a>
+                    </li>
+                </ul>
+                <div id="divSession">
+                    <h4>Bienvenid@ <?php echo htmlspecialchars($_SESSION['nombre']); ?></h4>
+                </div>
+                <div class="d-flex align-items-center">
+                    <a href="../CerrarSesion.php" class="btn btn-primary me-3">
+                        Cerrar sesión
+                    </a>
+                </div>
+                <div>
+                    <button id="volverBtn" class="btn btn-secondary">Volver</button>
+                </div>
+            </div>
+        </div>
+    </nav>
     <!-- Contenedor para mostrar la imagen y los botones de las mesas -->
     <div class="image-container">
         <img id="displayedImage" src="../img/priv4.jpg" alt="Privada 4">
@@ -19,28 +53,31 @@
 
     <script>
         // Configuración de las mesas con sus posiciones y etiquetas
-        const mesasConfig = [
-            {id:52, top: '46.5%', left: '45%', label: 'Mesa 1'},
-        ];
+        const mesasConfig = [{
+            id: 52,
+            top: '46.5%',
+            left: '45%',
+            label: 'Mesa 1'
+        }, ];
 
         // Función para cargar los botones con su estado
         function loadButtons() {
             const buttonsContainer = document.getElementById('mesaButtonsContainer');
-            
+
             mesasConfig.forEach((mesa) => {
                 const button = document.createElement('button');
                 button.className = 'mesa-button';
                 button.style.top = mesa.top;
                 button.style.left = mesa.left;
                 button.innerText = mesa.label;
-                button.setAttribute('data-id', mesa.id);  // Asignar ID de la mesa al botón
+                button.setAttribute('data-id', mesa.id); // Asignar ID de la mesa al botón
 
                 // Obtener el estado de la mesa desde la base de datos
                 fetch(`obtener_estado_mesa.php?id_mesa=${mesa.id}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.estado === 'ocupada') {
-                            button.classList.add('ocupada');  // Cambiar a rojo
+                            button.classList.add('ocupada'); // Cambiar a rojo
                         }
                     })
                     .catch(error => console.error('Error al obtener el estado de la mesa:', error));
@@ -57,7 +94,7 @@
         // Función para cambiar el estado de la mesa (ocupada o libre) y solicitar el número de sillas si es necesario
         function toggleMesaState(id, button) {
             const estado = button.classList.contains('ocupada') ? 'libre' : 'ocupada';
-            
+
             if (estado === 'ocupada') {
                 // Solicitar el número de sillas utilizando SweetAlert si se va a ocupar la mesa
                 Swal.fire({
@@ -84,44 +121,45 @@
 
                         // Actualizar el estado de la mesa en la base de datos
                         fetch('actualizar_estado_mesa.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: `id_mesa=${id}&estado=${estado}&sillas=${sillas}`
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            button.classList.add('ocupada'); // Cambiar a rojo
-                            console.log(data.message);
-                        })
-                        .catch(error => {
-                            console.error('Error al actualizar el estado de la mesa:', error);
-                        });
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: `id_mesa=${id}&estado=${estado}&sillas=${sillas}`
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                button.classList.add('ocupada'); // Cambiar a rojo
+                                console.log(data.message);
+                            })
+                            .catch(error => {
+                                console.error('Error al actualizar el estado de la mesa:', error);
+                            });
                     }
                 });
             } else {
                 // Cambiar a libre sin pedir número de sillas
                 fetch('actualizar_estado_mesa.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `id_mesa=${id}&estado=${estado}&sillas=0`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    button.classList.remove('ocupada'); // Cambiar a verde
-                    console.log(data.message);
-                })
-                .catch(error => {
-                    console.error('Error al actualizar el estado de la mesa:', error);
-                });
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `id_mesa=${id}&estado=${estado}&sillas=0`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        button.classList.remove('ocupada'); // Cambiar a verde
+                        console.log(data.message);
+                    })
+                    .catch(error => {
+                        console.error('Error al actualizar el estado de la mesa:', error);
+                    });
             }
         }
 
         document.addEventListener("DOMContentLoaded", loadButtons);
     </script>
-
+    <script src="../Js/volver.js"></script>
 </body>
+
 </html>
