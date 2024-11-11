@@ -20,18 +20,22 @@ session_start();
         <div class="left-section">
             <form action="./validaciones/validacion.php" method="POST" autocomplete="off">
                 <div class="inputs">
+                    <!-- Ecitar inyeccion HTML -->
                     <label class="labelLogIn" for="nombre">Usuario:</label>
                     <input class="inputLogIn" type="text" id="nombre" name="nombre" placeholder="Introducir usuario" 
-                    value="<?php echo isset($_SESSION['nombre']) ? htmlspecialchars($_SESSION['nombre'], ENT_QUOTES, 'UTF-8') : ''; ?>">
+                    value="<?php echo isset($_SESSION['nombre']) ? htmlspecialchars($_SESSION['nombre'], ENT_QUOTES, 'UTF-8') : ''; ?>"> 
+                    
                     <br>
-                    <span id="error-nombre" style="color: red;"></span> <!-- Aquí se mostrarán los errores -->
+                    <!-- validacion usuario javascript y en rojo -->
+                    <span id="error-nombre" style="color: red;"></span> 
                 </div>
 
                 <div class="inputs">
                     <label class="labelLogIn" for="contraseña">Contraseña:</label>
                     <input class="inputLogIn" type="password" id="contraseña" name="contrasena" placeholder="Introducir contraseña" autocomplete="off">
                      <br>
-                    <span id="error-contraseña" style="color: red;"></span> <!-- Aquí se mostrarán los errores -->
+                     <!-- validacion javascript para contraseña -->
+                    <span id="error-contraseña" style="color: red;"></span> 
                 </div>
 
                 <button type="submit" name="login" class="botonLogIn">Iniciar sesión</button>
