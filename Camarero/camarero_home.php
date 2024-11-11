@@ -19,13 +19,13 @@ if (!isset($_SESSION['nombre'])) {
 <body id="bodyMan">
     <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
         <div class="container">
-            <a href="./manager_home.php">
+            <a href="./camarero_home.php">
                 <img id="LogoNav" src="../img/LOGO-REST.png" />
             </a>
             <div class="collapse navbar-collapse" id="navbarButtonsExample">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="./manager_home.php">Inicio</a>
+                        <a class="nav-link" href="./camarero_home.php">Inicio</a>
                     </li>
                 </ul>
                 <div id="divSession">
@@ -42,19 +42,19 @@ if (!isset($_SESSION['nombre'])) {
     <div id="ocultarImg" class="">
         <div class="column-1">
             <h1 id="h1Sel">Seleccionar sala</h1>
-            <div class="image-container">
+            <div class="image-containerMan">
                 <a href="" id="Comedor">
                     <h3 class="text-overlay Comedor">Comedor</h3>
                     <img class="imgMan Comedor" src="../img/ComedorBtn.jpg" alt="Comedor">
                 </a>
             </div>
-            <div class="image-container">
+            <div class="image-containerMan">
                 <a href="" id="Privada">
                     <h3 class="text-overlay Privada">Privada</h3>
                     <img class="imgMan Privada" src="../img/PrivadaBtn.png" alt="Privada">
                 </a>
             </div>
-            <div class="image-container">
+            <div class="image-containerMan">
                 <a href="" id="Terraza">
                     <h3 class="text-overlay Terraza">Terraza</h3>
                     <img class="imgMan Terraza" src="../img/TerrazaBtn.png" alt="Terraza">
@@ -68,19 +68,18 @@ if (!isset($_SESSION['nombre'])) {
         <div class="column-1 flex">
             <div>
                 <h1 id="h1Sel">Seleccionar Comedor</h1>
-                <div class="image-container">
+                <div class="image-containerMan">
                     <a href="comedor1.php" id="Comedor">
                         <h3 class="text-overlay Comedor">Comedor 1</h3>
                         <img class="imgComedor" src="../img/Comedores.png" alt="Comedor">
                     </a>
                 </div>
-                <div class="image-container">
+                <div class="image-containerMan">
                     <a href="comedor2.php" id="Privada">
                         <h3 class="text-overlay Privada">Comedor 2</h3>
                         <img class="imgComedor" src="../img/Comedores.png" alt="Privada">
                     </a>
                 </div>
-                <button id="volverComedor" class="volverBtn">Volver</button>
             </div>
 
         </div>
@@ -90,13 +89,13 @@ if (!isset($_SESSION['nombre'])) {
         <div class="column-1">
             <h1 id="h1Sel">Seleccionar Sala Privada</h1>
             <div class="flex">
-                <div class="image-container">
+                <div class="image-containerMan">
                     <a href="privada1.php" id="Comedor">
                         <h3 class="text-overlay Comedor">Privada 1</h3>
                         <img class="imgSalaPriv" src="../img/SalasPrivadas.png" alt="Comedor">
                     </a>
                 </div>
-                <div class="image-container">
+                <div class="image-containerMan">
                     <a href="privada2.php" id="Privada">
                         <h3 class="text-overlay Privada">Privada 2</h3>
                         <img class="imgSalaPriv" src="../img/SalasPrivadas.png" alt="Privada">
@@ -105,45 +104,42 @@ if (!isset($_SESSION['nombre'])) {
             </div>
         </div>
         <div class="column-1 flex">
-            <div class="image-container">
+            <div class="image-containerMan">
                 <a href="privada3.php" id="Terraza">
                     <h3 class="text-overlay Terraza">Privada 3</h3>
                     <img class="imgSalaPriv" src="../img/SalasPrivadas.png" alt="Terraza">
                 </a>
             </div>
-            <div class="image-container">
+            <div class="image-containerMan">
                 <a href="privada4.php" id="Terraza">
                     <h3 class="text-overlay Terraza">Privada 4</h3>
                     <img class="imgSalaPriv" src="../img/SalasPrivadas.png" alt="Terraza">
                 </a>
             </div>
         </div>
-
-        <button id="volverPrivada" class="volverBtn">Volver</button>
     </div>
     <!-- Mostrar Terrazas -->
     <div id="Terrazas" class="content">
         <div class="column-1">
             <h1 id="h1Sel">Seleccionar Terraza</h1>
-            <div class="image-container">
+            <div class="image-containerMan">
                 <a href="terraza1.php" id="Comedor">
                     <h3 class="text-overlay Comedor">Terraza 1</h3>
                     <img class="imgTerraza" src="../img/Terrazas.png" alt="Comedor">
                 </a>
             </div>
-            <div class="image-container">
+            <div class="image-containerMan">
                 <a href="terraza2.php" id="Privada">
                     <h3 class="text-overlay Privada">Terraza 2</h3>
                     <img class="imgTerraza" src="../img/Terrazas.png" alt="Privada">
                 </a>
             </div>
-            <div class="image-container">
+            <div class="image-containerMan">
                 <a href="terraza3.php" id="Terraza">
                     <h3 class="text-overlay Terraza">Terraza 3</h3>
                     <img class="imgTerraza" src="../img/Terrazas.png" alt="Terraza">
                 </a>
             </div>
-            <button id="volverTerraza" class="volverBtn">Volver</button>
         </div>
     </div>
 
