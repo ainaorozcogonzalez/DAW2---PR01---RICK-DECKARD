@@ -3,15 +3,32 @@
     include_once("../conexion.php");
     session_start();
 
+    // Recojemos el valor de la sesión 'id_usuario' y lo guardamos en una variable
+    $camareroActual = mysqli_real_escape_string($con, htmlspecialchars($_SESSION['id_usuario']));
+
+    $sqlComprobar = "SELECT tipo_usuario FROM usuarios WHERE id_usuario = ?";
+    $stmtComprobar = mysqli_prepare($con, $sqlComprobar);
+    mysqli_stmt_bind_param($stmtComprobar, "i", $camareroActual);
+    mysqli_stmt_execute($stmtComprobar);
+    mysqli_stmt_bind_result($stmtComprobar, $tipoUsuario);
+    mysqli_stmt_close($stmtComprobar);
+
+
+
     if (!isset($_SESSION['id_usuario'])) {
 
         header('Location: ' . '../index.php');
         exit();
 
-    } else {
+    }
+    elseif ($tipoUsuario != "manager") {
+        
+        header('Location: ' . '../Camarero/camarero_home.php');
+        exit();
 
-        // Recojemos el valor de la sesión 'id_usuario' y lo guardamos en una variable
-        $camareroActual = mysqli_real_escape_string($con, htmlspecialchars($_SESSION['id_usuario']));
+    }
+    else {
+
 
         // Recojemos el valor del input para filtrar por sala y el valor del input para filtrar por fecha
         $buscar_sala = isset($_GET['buscar']) ? mysqli_real_escape_string($con, htmlspecialchars($_GET['buscar'])) : '';
