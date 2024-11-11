@@ -17,6 +17,6 @@
         <div id="mesaButtonsContainer"></div>
     </div>
 
-    <script src="4mesas.js"></script>
+    <script src="../Js/4mesas.js"></script>
 </body>
 </html>
