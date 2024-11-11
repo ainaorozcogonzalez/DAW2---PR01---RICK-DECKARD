@@ -46,7 +46,7 @@ if (!isset($_SESSION['nombre'])) {
             </div>
         </div>
     </nav>
-    <div class="image-container">
+    <div class="image-containerMes">
         <img id="displayedImage" src="../img/comedor2.jpg" alt="Terraza 1">
         <div id="mesaButtonsContainer"></div>
     </div>
