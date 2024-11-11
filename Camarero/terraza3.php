@@ -28,6 +28,9 @@
             background-color: #dc3545; /* rojo cuando está ocupada */
         }
     </style>
+    <!-- Incluir SweetAlert -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -40,14 +43,12 @@
     <script>
         // Configuración de las mesas con sus posiciones y etiquetas
         const mesasConfig = [
-                {id:14, top: '14.5%', left: '13%', label: 'Mesa 1'},
-                {id:15, top: '14.5%', left: '69%', label: 'Mesa 2'},
-                {id:16, top: '47%', left: '13%', label: 'Mesa 3'},
-                {id:17, top: '47%', left: '69%', label: 'Mesa 4'},
-                {id:18, top: '80%', left: '13%', label: 'Mesa 5' },
-                {id:19, top: '80%', left: '69%', label: 'Mesa 6' }
-
-
+            { id: 14, top: '14.5%', left: '13%', label: 'Mesa 1' },
+            { id: 15, top: '14.5%', left: '69%', label: 'Mesa 2' },
+            { id: 16, top: '47%', left: '13%', label: 'Mesa 3' },
+            { id: 17, top: '47%', left: '69%', label: 'Mesa 4' },
+            { id: 18, top: '80%', left: '13%', label: 'Mesa 5' },
+            { id: 19, top: '80%', left: '69%', label: 'Mesa 6' }
         ];
 
         // Función para cargar los botones con su estado
@@ -85,26 +86,66 @@
         function toggleMesaState(id, button) {
             const estado = button.classList.contains('ocupada') ? 'libre' : 'ocupada';
             
-            // Actualizar el estado de la mesa en la base de datos
-            fetch('actualizar_estado_mesa.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded', // Usamos urlencoded
-                },
-                body: `id_mesa=${id}&estado=${estado}` // Enviamos los datos por POST
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (estado === 'ocupada') {
-                    button.classList.add('ocupada'); // Cambiar a rojo
-                } else {
+            if (estado === 'ocupada') {
+                // Solicitar el número de sillas utilizando SweetAlert si se va a ocupar la mesa
+                Swal.fire({
+                    title: 'Ingrese el número de sillas necesarias para esta mesa:',
+                    input: 'number',
+                    inputAttributes: {
+                        min: 1,
+                        max: 6,
+                        step: 1
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Confirmar',
+                    cancelButtonText: 'Cancelar',
+                    inputValidator: (value) => {
+                        if (!value) {
+                            return 'Debe ingresar un número de sillas.';
+                        } else if (value < 1 || value > 6) {
+                            return 'Por favor, ingrese un número de sillas entre 1 y 6.';
+                        }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const sillas = parseInt(result.value);
+
+                        // Actualizar el estado de la mesa en la base de datos
+                        fetch('actualizar_estado_mesa.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: `id_mesa=${id}&estado=${estado}&sillas=${sillas}`
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            button.classList.add('ocupada'); // Cambiar a rojo
+                            console.log(data.message);
+                        })
+                        .catch(error => {
+                            console.error('Error al actualizar el estado de la mesa:', error);
+                        });
+                    }
+                });
+            } else {
+                // Cambiar a libre sin pedir número de sillas
+                fetch('actualizar_estado_mesa.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `id_mesa=${id}&estado=${estado}&sillas=0`
+                })
+                .then(response => response.json())
+                .then(data => {
                     button.classList.remove('ocupada'); // Cambiar a verde
-                }
-                console.log(data.message);
-            })
-            .catch(error => {
-                console.error('Error al actualizar el estado de la mesa:', error);
-            });
+                    console.log(data.message);
+                })
+                .catch(error => {
+                    console.error('Error al actualizar el estado de la mesa:', error);
+                });
+            }
         }
 
         document.addEventListener("DOMContentLoaded", loadButtons);

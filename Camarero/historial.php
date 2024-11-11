@@ -30,7 +30,7 @@
             case 'ocupacion':
 
                 $sqlHistorial = "SELECT ocupaciones.id_ocupacion, ocupaciones.id_mesa, ocupaciones.id_usuario, 
-                    ocupaciones.fecha_ocupacion, ocupaciones.fecha_libera, mesas.id_mesa, mesas.capacidad, 
+                    ocupaciones.fecha_ocupacion, ocupaciones.fecha_libera, ocupaciones.sillas, mesas.id_mesa, mesas.capacidad, 
                     mesas.estado, mesas.id_sala, usuarios.id_usuario, usuarios.nombre_completo, 
                     usuarios.contraseña, usuarios.tipo_usuario
                     FROM ocupaciones
@@ -53,7 +53,7 @@
 
             case 'uso':
 
-                $sqlHistorial = "SELECT ocupaciones.id_ocupacion, ocupaciones.id_mesa, COUNT(ocupaciones.id_mesa) AS numero_de_usos, 
+                $sqlHistorial = "SELECT ocupaciones.id_mesa, COUNT(ocupaciones.id_mesa) AS numero_de_usos, 
                     GROUP_CONCAT(ocupaciones.id_ocupacion) AS ocupaciones_concatenadas, mesas.capacidad, mesas.estado, mesas.id_sala,
                     salas.id_sala, salas.nombre, salas.capacidad
                     FROM ocupaciones
@@ -69,7 +69,7 @@
 
                 $sqlHistorial = "SELECT mesas.id_mesa AS id_mesa, mesas.capacidad, mesas.estado, mesas.id_sala,
                     salas.id_sala, salas.nombre, salas.capacidad,
-                    ocupaciones.id_ocupacion, ocupaciones.id_mesa AS id_mesas_ocupadas, ocupaciones.fecha_ocupacion, ocupaciones.fecha_libera,
+                    ocupaciones.id_ocupacion, ocupaciones.id_mesa AS id_mesas_ocupadas, ocupaciones.sillas, ocupaciones.fecha_ocupacion, ocupaciones.fecha_libera,
                     usuarios.id_usuario, usuarios.nombre_completo, usuarios.contraseña, usuarios.tipo_usuario
                     FROM mesas
                     INNER JOIN salas ON salas.id_sala = mesas.id_sala
@@ -216,6 +216,7 @@
 
                         <th>Ocupación</th>
                         <th>Mesa</th>
+                        <th>Sillas ocupadas</th>
                         <th>Estado</th>
                         <th>Camarero</th>
                         <th>Fecha ocupación</th>
@@ -237,6 +238,7 @@
 
                         <th>Ocupación</th>
                         <th>Mesa</th>
+                        <th>Sillas ocupadas</th>
                         <th>Sala</th>
                         <th>Estado</th>
                         <th>Camarero</th>
@@ -276,6 +278,9 @@
                                 
                                 // Mostramos las mesas y su estado actual
                                 echo "<td>Mesa ".$fila['id_mesa']."</td>";
+
+                                echo "<td>".$fila['sillas']."</td>";
+
                                 echo "<td>".$fila['estado']."</td>";
 
                                 // Si esta mesa ha sido asignada por un camarero (si existe una id_usuario),
@@ -349,11 +354,11 @@
                                 // si no, mostramos un mensaje de que aún no ha sido ocupada
                                 if ($fila['id_ocupacion'] != NULL) {
 
-                                    echo "<td style='width: 22%;' >Ocupación ".$fila['id_ocupacion']."</td>";
+                                    echo "<td style='width: 23%;' >Ocupación ".$fila['id_ocupacion']."</td>";
 
                                 } else {
 
-                                    echo "<td style='width: 22%;'>Esta mesa aún no se ha ocupado</td>";
+                                    echo "<td style='width: 23%;'>Esta mesa aún no se ha ocupado</td>";
 
                                 }
                                 
@@ -368,6 +373,18 @@
                                     echo "<td style='width: 6%;'>Mesa ".$fila['id_mesa']."</td>";
                                     
                                 }
+
+
+                                if ($fila['sillas'] != NULL) {
+
+                                    echo "<td style='width: 6%;'>".$fila['sillas']."</td>";
+
+                                } else {
+
+                                    echo "<td style='width: 6%;'> No hay sillas ocupadas aún</td>";
+                                    
+                                }
+                                
 
                                 // Mostramos el nombre de la sala y su estado actual
                                 echo "<td>".$fila['nombre']."</td>";
