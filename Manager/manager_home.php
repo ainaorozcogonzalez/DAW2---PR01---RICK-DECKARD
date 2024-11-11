@@ -38,7 +38,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.0/mdb.min.css" rel="stylesheet">
 </head>
 
-<body id="bodyMan">
+<body id="bodyGen">
     <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
         <div class="container">
             <a href="./manager_home.php">
