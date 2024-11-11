@@ -29,7 +29,6 @@ if ($resultado && mysqli_num_rows($resultado) > 0) {
         $_SESSION['id_usuario'] = $fila['id_usuario'];
         $_SESSION['nombre'] = $_POST['nombre'];
 
-        unset($_SESSION['nombre']); // Borramos el nombre de la sesión después de un inicio de sesión exitoso
 
         // Redirigir según el tipo de usuario
         if ($fila['tipo_usuario'] === 'camarero') {
