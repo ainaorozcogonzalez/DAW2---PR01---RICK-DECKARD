@@ -46,7 +46,7 @@ if (!isset($_SESSION['nombre'])) {
         </div>
     </nav>
     <!-- Contenedor para mostrar la imagen y los botones de las mesas -->
-    <div class="image-container">
+    <div class="image-containerMes">
         <img id="displayedImage" src="../img/terraza1.jpg" alt="Terraza 1">
         <div id="mesaButtonsContainer"></div>
     </div>

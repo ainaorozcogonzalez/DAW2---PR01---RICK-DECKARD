@@ -39,17 +39,19 @@ if (!isset($_SESSION['nombre'])) {
                         Cerrar sesión
                     </a>
                 </div>
-
+                <div>
+                    <button id="volverBtn" class="btn btn-secondary">Volver</button>
+                </div>
             </div>
         </div>
     </nav>
     <!-- Contenedor para mostrar la imagen y los botones de las mesas -->
-    <div class="image-container">
+    <div class="image-containerMes">
         <img id="displayedImage" src="../img/terraza3.jpg" alt="Terraza 3">
         <div id="mesaButtonsContainer"></div>
     </div>
     <script src="../Js/volver.js"></script>
-    <script src ="../Js/6mesas.js"></script>
+    <script src="../Js/6mesas.js"></script>
 </body>
 
 </html>
