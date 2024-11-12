@@ -17,18 +17,23 @@ if (!isset($_SESSION['nombre'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="../CSS/styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.0/mdb.min.css" rel="stylesheet">
+    <!-- Bootstrap JS (y dependencias) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
 </head>
 
 <body id="bodyGen">
     <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
         <div class="container">
-            <a href="./manager_home.php">
-                <img id="LogoNav" src="../img/LOGO-REST.png" />
+            <!-- Logo como botón de hamburguesa -->
+            <a href="./manager_home.php" data-bs-toggle="collapse" data-bs-target="#navbarButtonsExample" aria-controls="navbarButtonsExample" aria-expanded="false" aria-label="Toggle navigation">
+                <img id="LogoNav" src="../img/LOGO-REST.png" alt="Logo" />
             </a>
             <div class="collapse navbar-collapse" id="navbarButtonsExample">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="./manager_home.php">Inicio</a>
+                        <a id="aNav" class="nav-link" href="./manager_home.php">Inicio</a>
                     </li>
                 </ul>
                 <div id="divSession">
@@ -38,20 +43,17 @@ if (!isset($_SESSION['nombre'])) {
                     <a href="../CerrarSesion.php" class="btn btn-primary me-3">
                         Cerrar sesión
                     </a>
-                </div>
-                <div>
                     <button id="volverBtn" class="btn btn-secondary">Volver</button>
                 </div>
             </div>
         </div>
     </nav>
-    <!-- Contenedor para mostrar la imagen y los botones de las mesas -->
     <div class="image-containerMes">
         <img id="displayedImage" src="../img/priv2.jpg" alt="Privada 2">
         <div id="mesaButtonsContainer"></div>
     </div>
     <script src="../Js/volver.js"></script>
-    <script src="../Js/4mesas.js"></script>
+    <script src="../Js/privada2.js"></script>
 
 </body>
 

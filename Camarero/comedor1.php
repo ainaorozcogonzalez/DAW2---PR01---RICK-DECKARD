@@ -16,9 +16,6 @@ if (!isset($_SESSION['nombre'])) {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="../CSS/styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.0/mdb.min.css" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Bootstrap JS (y dependencias) -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
@@ -32,23 +29,19 @@ if (!isset($_SESSION['nombre'])) {
             <a href="./manager_home.php" data-bs-toggle="collapse" data-bs-target="#navbarButtonsExample" aria-controls="navbarButtonsExample" aria-expanded="false" aria-label="Toggle navigation">
                 <img id="LogoNav" src="../img/LOGO-REST.png" alt="Logo" />
             </a>
-
-            <!-- Menú colapsable -->
             <div class="collapse navbar-collapse" id="navbarButtonsExample">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="./manager_home.php">Inicio</a>
+                        <a id="aNav" class="nav-link" href="./manager_home.php">Inicio</a>
                     </li>
                 </ul>
-                <div id="divSession" class="d-none d-lg-block">
+                <div id="divSession">
                     <h4>Bienvenid@ <?php echo htmlspecialchars($_SESSION['nombre']); ?></h4>
                 </div>
                 <div class="d-flex align-items-center">
                     <a href="../CerrarSesion.php" class="btn btn-primary me-3">
                         Cerrar sesión
                     </a>
-                </div>
-                <div>
                     <button id="volverBtn" class="btn btn-secondary">Volver</button>
                 </div>
             </div>
@@ -62,7 +55,7 @@ if (!isset($_SESSION['nombre'])) {
         <div id="mesaButtonsContainer"></div>
     </div>
     <script src="../Js/volver.js"></script>
-    <script src="../Js/9mesas.js"></script>
+    <script src="../Js/comedor1.js"></script>
 </body>
 
 </html>
