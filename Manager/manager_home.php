@@ -10,6 +10,7 @@
     mysqli_stmt_bind_param($stmtComprobar, "i", $camareroActual);
     mysqli_stmt_execute($stmtComprobar);
     mysqli_stmt_bind_result($stmtComprobar, $tipoUsuario);
+    mysqli_stmt_fetch($stmtComprobar);
     mysqli_stmt_close($stmtComprobar);
 
 
@@ -19,12 +20,15 @@
         exit();
 
     }
+
     elseif ($tipoUsuario != "manager") {
 
         header('Location: ' . '../Camarero/camarero_home.php');
         exit();
 
     }
+
+    else {
 ?>
 
 <!DOCTYPE html>
@@ -171,5 +175,7 @@
     <script src="../Js/MostMesas.js"></script>
 
 </body>
-
 </html>
+<?php
+    }
+?>
