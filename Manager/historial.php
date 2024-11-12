@@ -32,7 +32,9 @@
 
 
         // Recojemos el valor del input para filtrar por sala y el valor del input para filtrar por fecha
-        $buscar_sala = isset($_GET['buscar']) ? mysqli_real_escape_string($con, htmlspecialchars($_GET['buscar'])) : '';
+        $buscar_sala = isset($_GET['buscarSala']) ? mysqli_real_escape_string($con, htmlspecialchars($_GET['buscarSala'])) : '';
+        $buscar_camarero = isset($_GET['buscarCamarero']) ? mysqli_real_escape_string($con, htmlspecialchars($_GET['buscarCamarero'])) : '';
+        $buscar_estado = isset($_GET['buscarEstado']) ? mysqli_real_escape_string($con, htmlspecialchars($_GET['buscarEstado'])) : '';
         $fecha = isset($_GET['fecha']) ? mysqli_real_escape_string($con, htmlspecialchars($_GET['fecha'])) : '';
 
         // Comprobamos si se se recibe el valor de 'pagina', si se recibe, lo recojemos, sino nos lleva a 'Historial Mesas'
@@ -45,26 +47,29 @@
         // CAMBIAR ENTRE PÁGINAS (OCUPACIONES / SALAS / SALAS MÁS USADAS / HISTORIAL MESAS)
         switch ($paginas) {
 
-            case 'ocupacion':
-
-                $sqlHistorial = "SELECT ocupaciones.id_ocupacion, ocupaciones.id_mesa, ocupaciones.id_usuario, 
-                    ocupaciones.fecha_ocupacion, ocupaciones.fecha_libera, ocupaciones.sillas, mesas.id_mesa, mesas.capacidad, 
-                    mesas.estado, mesas.id_sala, usuarios.id_usuario, usuarios.nombre_completo, 
-                    usuarios.contraseña, usuarios.tipo_usuario
-                    FROM ocupaciones
-                    INNER JOIN mesas ON mesas.id_mesa = ocupaciones.id_mesa
+            case 'historial':
+                
+                $sqlHistorial = "SELECT mesas.id_mesa AS id_mesa, mesas.capacidad, mesas.estado, mesas.id_sala,
+                    salas.id_sala, salas.nombre, salas.capacidad,
+                    ocupaciones.id_ocupacion, ocupaciones.id_mesa AS id_mesas_ocupadas, ocupaciones.sillas, ocupaciones.fecha_ocupacion, ocupaciones.fecha_libera,
+                    usuarios.id_usuario, usuarios.nombre_completo, usuarios.contraseña, usuarios.tipo_usuario
+                    FROM mesas
                     INNER JOIN salas ON salas.id_sala = mesas.id_sala
-                    INNER JOIN usuarios ON usuarios.id_usuario = ocupaciones.id_usuario";
+                    LEFT JOIN ocupaciones ON ocupaciones.id_mesa = mesas.id_mesa
+                    LEFT JOIN usuarios ON usuarios.id_usuario = ocupaciones.id_usuario 
+                    ";
 
                 $tieneORDERBY = false;
                 break;
+
 
             case 'sala':
 
                 $sqlHistorial = "SELECT salas.id_sala, salas.nombre, salas.capacidad, 
                     mesas.id_mesa, mesas.capacidad AS capacidad_mesa, mesas.estado, mesas.id_sala
                     FROM salas
-                    INNER JOIN mesas ON salas.id_sala = mesas.id_sala";
+                    INNER JOIN mesas ON salas.id_sala = mesas.id_sala
+                    GROUP BY salas.id_sala";
 
                 $tieneORDERBY = false;
                 break;
@@ -85,15 +90,15 @@
 
             default:
 
-                $sqlHistorial = "SELECT mesas.id_mesa AS id_mesa, mesas.capacidad, mesas.estado, mesas.id_sala,
-                    salas.id_sala, salas.nombre, salas.capacidad,
-                    ocupaciones.id_ocupacion, ocupaciones.id_mesa AS id_mesas_ocupadas, ocupaciones.sillas, ocupaciones.fecha_ocupacion, ocupaciones.fecha_libera,
-                    usuarios.id_usuario, usuarios.nombre_completo, usuarios.contraseña, usuarios.tipo_usuario
-                    FROM mesas
-                    INNER JOIN salas ON salas.id_sala = mesas.id_sala
-                    LEFT JOIN ocupaciones ON ocupaciones.id_mesa = mesas.id_mesa
-                    LEFT JOIN usuarios ON usuarios.id_usuario = ocupaciones.id_usuario 
-                    ";
+                $sqlHistorial = "SELECT ocupaciones.id_ocupacion, ocupaciones.id_mesa, ocupaciones.id_usuario, 
+                ocupaciones.fecha_ocupacion, ocupaciones.fecha_libera, ocupaciones.sillas, mesas.id_mesa, mesas.capacidad, 
+                mesas.estado, mesas.id_sala,
+                salas.nombre,
+                usuarios.id_usuario, usuarios.nombre_completo, usuarios.contraseña, usuarios.tipo_usuario
+                FROM ocupaciones
+                INNER JOIN mesas ON mesas.id_mesa = ocupaciones.id_mesa
+                INNER JOIN salas ON salas.id_sala = mesas.id_sala
+                INNER JOIN usuarios ON usuarios.id_usuario = ocupaciones.id_usuario";
 
                 $tieneORDERBY = false;
                 break;
@@ -106,11 +111,24 @@
         $filtros = [];
         $parametros = [];
 
-        // Si hemos introducido texto en el input 'buscar'
+        // Si hemos introducido texto en el input 'buscarCamarero'
+        if ($buscar_camarero != "") {
+            $filtros[] = "usuarios.nombre_completo LIKE ?";
+            $parametros[] = '%' . $buscar_camarero . '%';
+        }
+
+        // Si hemos introducido texto en el input 'buscarSala'
         if ($buscar_sala != "") {
             $filtros[] = "salas.nombre LIKE ?";
             $parametros[] = '%' . $buscar_sala . '%';
         }
+
+        // Si hemos introducido texto en el input 'buscarSala'
+        if ($buscar_estado != "") {
+            $filtros[] = "salas.nombre LIKE ?";
+            $parametros[] = '%' . $buscar_estado . '%';
+        }
+
 
         // Si hemos introducido una fecha en el input 'fecha'
         if ($fecha != "") {
@@ -157,6 +175,17 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
+    <style>
+        .divNavbar {
+            width: 160%;
+        }
+
+        @media (max-width: 1680px) {
+            .divNavbar {
+                width: 3000%;
+            }
+        }
+    </style>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
 
@@ -171,16 +200,16 @@
             </button>
 
             <!-- FILTROS Y PÁGINAS -->
-            <div class="collapse navbar-collapse" id="navbarContent">
+            <div class="collapse navbar-collapse divNavbar" id="navbarContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 
-                    <!-- Los filtros solo se mostrarán en la página de 'Historial Mesas' -->
-                    <?php if ($paginas != 'ocupacion' && $paginas != 'uso' && $paginas != 'sala') : ?>
-                        <form class="form-inline my-2 my-lg-0" method="GET">
-                            <input class="form-control mr-sm-2" type="search" name="buscar" placeholder="Buscar Sala..." aria-label="Buscar Sala...">
-                        </form>
-                        <form class="d-flex align-items-center" style="margin-left: 10px; margin-right: 10px;" method="GET">
-                            <input style="color: #000000A6; width: 150px;" class="form-control me-2" type="date" id="start" name="fecha"/>
+                    <!-- Los filtros solo se mostrarán en la página de 'Ocupaciones' -->
+                    <?php if ($paginas != 'historial' && $paginas != 'uso' && $paginas != 'sala') : ?>
+                        <form class="form-inline my-2 my-lg-0 d-flex align-items-center" method="GET">
+                            <input class="form-control mr-sm-2" type="search" name="buscarCamarero" placeholder="Buscar Camarero" aria-label="Buscar Camarero" value="<?php if(isset($_GET['buscarCamarero'])) {echo $_GET['buscarCamarero'];} ?>">
+                            <input class="form-control mr-sm-2" style="margin-left: 10px;" type="search" name="buscarSala" placeholder="Buscar Sala" aria-label="Buscar Sala" value="<?php if(isset($_GET['buscarSala'])) {echo $_GET['buscarSala'];} ?>">
+                            <input class="form-control mr-sm-2" style="margin-left: 10px;" type="search" name="buscarEstado" placeholder="Buscar Estado" aria-label="Buscar Estado" value="<?php if(isset($_GET['buscarEstado'])) {echo $_GET['buscarEstado'];} ?>">
+                            <input style="color: #000000A6; margin-left: 10px;" class="form-control me-2" type="date" id="start" name="fecha" value="<?php if(isset($_GET['fecha'])) {echo $_GET['fecha'];} ?>"/>
                             <button type="submit" class="btn btn-primary" style="height: 93%;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="26" fill="currentColor" class="bi bi-calendar2-check-fill" viewBox="0 1.4 16 16">
                                     <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5m9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5m-2.6 5.854a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z"/>
@@ -191,12 +220,12 @@
 
                     <!-- Página Historial Mesas (predeterminada) -->
                     <li class="nav-item">
-                        <a class="nav-link" href="?pagina=default">Historial Mesas</a>
+                        <a class="nav-link" href="?pagina=default">Ocupaciones</a>
                     </li>
 
                     <!-- Página Ocupaciones -->
                     <li class="nav-item">
-                        <a class="nav-link" href="?pagina=ocupacion">Ocupaciones</a>
+                        <a class="nav-link" href="?pagina=historial">Historial Mesas</a>
                     </li>
 
                     <!-- Página Salas -->
@@ -216,25 +245,26 @@
     <div class="container mt-4">
 
         <!-- Dependiendo de que opción escojamos en el navbar, nos mostrará una página u otra -->
-        <?php if ($paginas == 'ocupacion') : ?>
-            <h2>Ocupaciones</h2>
+        <?php if ($paginas == 'historial') : ?>
+            <h2>Historial mesas</h2>
         <?php elseif ($paginas == 'uso') : ?>
             <h2>Mesas más usadas a menos</h2>
         <?php elseif ($paginas == 'sala') : ?>
             <h2>Salas</h2>
         <?php else : ?>
-            <h2>Historial mesas</h2>
+            <h2>Ocupaciones</h2>
         <?php endif; ?>
         
         <!-- Creamos la tabla, y dependiendo de que opción hayamos escojido, creamos un encabezado (para las columnas) u otro -->
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <?php if ($paginas == 'ocupacion') : ?>
+                    <?php if ($paginas == 'historial') : ?>
 
                         <th>Ocupación</th>
                         <th>Mesa</th>
                         <th>Sillas ocupadas</th>
+                        <th>Sala</th>
                         <th>Estado</th>
                         <th>Camarero</th>
                         <th>Fecha ocupación</th>
@@ -280,93 +310,7 @@
                             echo "<tr>";
 
                             // MOSTRAR OCUPACIONES
-                            if ($paginas == 'ocupacion') {
-
-                                // Si esta mesa ha sido ocupada (si existe 'id_ocupacion') mostramos 'Ocupación (y su ID)'
-                                // si no, mostramos un mensaje de que aún no ha sido ocupada
-                                if ($fila['id_ocupacion'] != NULL) {
-
-                                    echo "<td>Ocupación ".$fila['id_ocupacion']."</td>";
-
-                                } else {
-
-                                    echo "<td>Esta mesa aún no ha sido ocupada</td>";
-
-                                }
-                                
-                                // Mostramos las mesas y su estado actual
-                                echo "<td>Mesa ".$fila['id_mesa']."</td>";
-
-                                echo "<td>".$fila['sillas']."</td>";
-
-                                echo "<td>".$fila['estado']."</td>";
-
-                                // Si esta mesa ha sido asignada por un camarero (si existe una id_usuario),
-                                // mostramos el nombre de este, si no, le mostramos un mensaje de que ningún camarero la ha asignado
-                                if ($fila['id_usuario'] != NULL) {
-
-                                    echo "<td>".$fila['nombre_completo']."</td>";
-
-                                } else {
-
-                                    echo "<td> Ningún camarero ha asignado esta mesa </td>";
-
-                                }
-
-                                // Mostramos la fecha en la que se ha ocupado la mesa
-                                echo "<td>".$fila['fecha_ocupacion']."</td>";
-
-                                // Si la fecha en la que se ha desocupado existe, la mostramos
-                                // Si no, mostramos un mensaje de que sigue ocupada
-                                if ($fila['fecha_libera'] != NULL) {
-
-                                    echo "<td>".$fila['fecha_libera']."</td>";
-
-                                } else {
-
-                                    echo "<td> Esta mesa actualmente está siendo ocupada </td>";
-
-                                }
-                                
-
-                            // MOSTRAR DE LAS MESAS MÁS USADAS A MENOS
-                            } elseif ($paginas == 'uso') {
-
-                                // Si solo se ha usado una vez, mostramos (el número de veces, y el texto 'vez')
-                                if ($fila['numero_de_usos'] == 1) {
-
-                                    echo "<td>".$fila['numero_de_usos']." vez</td>";
-
-                                } else {
-
-                                    echo "<td>".$fila['numero_de_usos']." veces</td>";
-
-                                }
-                                
-                                // Mostramos las mesas y el nombre de la sala en la que están
-                                echo "<td>Mesa ".$fila['id_mesa']."</td>";                                
-                                echo "<td>".$fila['nombre']."</td>";
-
-                                // Mostramos las ocupaciones en las que se ha usado esta mesa 
-                                echo "<td>";
-
-                                    // Buscamos todas las comas en la cadena 'ocupaciones_concatenadas' y lo reemplaza por ', Ocupación '
-                                    // de manera que queda "Ocupación 1, Ocupación 2, Ocupación 3, etc..."
-                                    echo "Ocupación " . str_replace(',', ', Ocupación ', $fila['ocupaciones_concatenadas']);
-
-                                echo "</td>";
-
-
-                            // MOSTRAR SALAS
-                            } elseif ($paginas == 'sala') {
-
-                                // Mostramos el nombre de la sala y su capacidad
-                                echo "<td>".$fila['nombre']."</td>";
-                                echo "<td>".$fila['capacidad']."</td>";
-
-
-                            // MOSTRAR TANTO LAS MESAS OCUPADAS Y NO OCUPADAS
-                            } else {
+                            if ($paginas == 'historial') {
 
                                 // Si esta mesa ha sido ocupada (si existe 'id_ocupacion') mostramos 'Ocupación (y su ID)'
                                 // si no, mostramos un mensaje de que aún no ha sido ocupada
@@ -446,6 +390,98 @@
                                 } elseif ($fila['id_ocupacion'] == NULL) {
                                     
                                     echo "<td style='width: 20%;'> Esta mesa aún no se ha ocupado </td>";
+
+                                }
+                                
+
+                            // MOSTRAR DE LAS MESAS MÁS USADAS A MENOS
+                            } elseif ($paginas == 'uso') {
+
+                                // Si solo se ha usado una vez, mostramos (el número de veces, y el texto 'vez')
+                                if ($fila['numero_de_usos'] == 1) {
+
+                                    echo "<td>".$fila['numero_de_usos']." vez</td>";
+
+                                } else {
+
+                                    echo "<td>".$fila['numero_de_usos']." veces</td>";
+
+                                }
+                                
+                                // Mostramos las mesas y el nombre de la sala en la que están
+                                echo "<td>Mesa ".$fila['id_mesa']."</td>";                                
+                                echo "<td>".$fila['nombre']."</td>";
+
+                                // Mostramos las ocupaciones en las que se ha usado esta mesa 
+                                echo "<td>";
+
+                                    // Buscamos todas las comas en la cadena 'ocupaciones_concatenadas' y lo reemplaza por ', Ocupación '
+                                    // de manera que queda "Ocupación 1, Ocupación 2, Ocupación 3, etc..."
+                                    echo "Ocupación " . str_replace(',', ', Ocupación ', $fila['ocupaciones_concatenadas']);
+
+                                echo "</td>";
+
+
+                            // MOSTRAR SALAS
+                            } elseif ($paginas == 'sala') {
+
+                                // Mostramos el nombre de la sala y su capacidad
+                                echo "<td>".$fila['nombre']."</td>";
+                                echo "<td>".$fila['capacidad']."</td>";
+
+
+                            // MOSTRAR TANTO LAS MESAS OCUPADAS Y NO OCUPADAS
+                            } else {
+
+                                
+
+
+
+                                // Si esta mesa ha sido ocupada (si existe 'id_ocupacion') mostramos 'Ocupación (y su ID)'
+                                // si no, mostramos un mensaje de que aún no ha sido ocupada
+                                if ($fila['id_ocupacion'] != NULL) {
+
+                                    echo "<td>Ocupación ".$fila['id_ocupacion']."</td>";
+
+                                } else {
+
+                                    echo "<td>Esta mesa aún no ha sido ocupada</td>";
+
+                                }
+                                
+                                // Mostramos las mesas, las sillas, las salas y su estado actual
+                                echo "<td>Mesa ".$fila['id_mesa']."</td>";
+
+                                echo "<td>".$fila['sillas']."</td>";
+
+                                echo "<td>".$fila['nombre']."</td>";
+
+                                echo "<td>".$fila['estado']."</td>";
+
+                                // Si esta mesa ha sido asignada por un camarero (si existe una id_usuario),
+                                // mostramos el nombre de este, si no, le mostramos un mensaje de que ningún camarero la ha asignado
+                                if ($fila['id_usuario'] != NULL) {
+
+                                    echo "<td>".$fila['nombre_completo']."</td>";
+
+                                } else {
+
+                                    echo "<td> Ningún camarero ha asignado esta mesa </td>";
+
+                                }
+
+                                // Mostramos la fecha en la que se ha ocupado la mesa
+                                echo "<td>".$fila['fecha_ocupacion']."</td>";
+
+                                // Si la fecha en la que se ha desocupado existe, la mostramos
+                                // Si no, mostramos un mensaje de que sigue ocupada
+                                if ($fila['fecha_libera'] != NULL) {
+
+                                    echo "<td>".$fila['fecha_libera']."</td>";
+
+                                } else {
+
+                                    echo "<td> Esta mesa actualmente está siendo ocupada </td>";
 
                                 }
 
