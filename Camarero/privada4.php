@@ -53,7 +53,7 @@ if (!isset($_SESSION['nombre'])) {
         <div id="mesaButtonsContainer"></div>
     </div>
     <script src="../Js/volver.js"></script>
-    <script src="../Js/1mesa.js"></script>
+    <script src="../Js/privada4.js"></script>
 </body>
 
 </html>
