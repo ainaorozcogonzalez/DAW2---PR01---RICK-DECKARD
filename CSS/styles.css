@@ -142,7 +142,7 @@
     object-fit: contain;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 800px) {
     #containerLogIn {
         flex-direction: column;
         height: auto;
@@ -302,10 +302,8 @@
 nav #LogoNav {
     height: 50px;
     cursor: pointer;
-    /* Indica que es un botón */
 }
 
-/* Fondo de la navbar */
 nav {
     background-color: white;
     border-radius: 15px;
@@ -314,31 +312,41 @@ nav {
     align-items: center;
 }
 
-/* Alinear el nombre de sesión al centro en pantallas grandes */
 #divSession {
     flex-grow: 1;
     display: flex;
     justify-content: center;
 }
 
-/* Ajustes para pantallas pequeñas */
 @media (max-width: 800px) {
 
-    /* Cambiar tamaño del logo en pantallas pequeñas */
-    nav #LogoNav {
-        height: 40px;
+    .navbar {
+        display: none;
     }
 
-    
+    .navbar-toggler {
+        display: block;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
 
-    /* Ajustes del menú en pantallas pequeñas */
     .navbar-collapse {
-        display: flex;
-        justify-content: flex-end;
+        display: none;
     }
 
-    .navbar-nav {
-        margin-right: 10px;
+    .navbar-collapse.show {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .d-flex {
+        display: flex;
+        gap: 10px;
+    }
+    #aNav{
+        display: none;
     }
 }
 
@@ -377,7 +385,6 @@ nav {
 
 .mesa-button.ocupada {
     background-color: #dc3545;
-    /* rojo cuando está ocupada */
 }
 
 /* Fin Salas Mesas*/
