@@ -57,7 +57,7 @@ if (!isset($_SESSION['nombre'])) {
                     </div>
                     <div class="d-flex align-items-center">
                         <a href="../CerrarSesion.php" class="btn btn-primary me-3">Cerrar sesión</a>
-                        <a href="./historial.php" class="btn btn-secondary me-3">Ver Historial</a>
+                        <a href="./historiall.php" class="btn btn-secondary me-3">Ver Historial</a>
                         <a href="./manager_home.php" class="btn btn-secondary">Volver</a>
                     </div>
                 </div>

@@ -8,6 +8,7 @@
     font-style: normal;
 }
 
+
 /* Clear floats after the columns */
 
 .row:after {
@@ -178,6 +179,171 @@
         width: 80%;
     }
 }
+
+/* Estilos para el formulario de filtro */
+/* Estilo del h2 */
+/* Estilos generales */
+
+/* Estilo del h2 */
+h2 {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 24px;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+    letter-spacing: 1px;
+}
+
+/* Estilo del botón de volver */
+.back-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* Efecto hover del botón de volver */
+.back-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px); /* Efecto de elevación */
+}
+
+/* Estilo del formulario de filtros */
+.filter-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas */
+    gap: 15px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 800px; /* Reducir el ancho máximo */
+}
+
+/* Agrupación de filtros en filas específicas */
+.filter-form .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Cada grupo tiene dos columnas */
+    gap: 15px;
+    align-items: center;
+}
+
+/* Estilo de las etiquetas */
+.filter-form label {
+    font-weight: 500;
+    font-size: 14px;
+    color: #495057;
+    margin-bottom: 6px;
+    display: block;
+}
+
+/* Estilo de los campos de entrada (input y select) */
+.filter-form input,
+.filter-form select {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+/* Efecto de enfoque para los campos de entrada */
+.filter-form input:focus,
+.filter-form select:focus {
+    border-color: #007bff;
+    background-color: #fff;
+    outline: none;
+}
+
+/* Estilo del botón de enviar */
+.filter-form button {
+    grid-column: span 2;
+    padding: 12px;
+    font-size: 14px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-weight: 600;
+}
+
+/* Efecto hover del botón de enviar */
+.filter-form button:hover {
+    background-color: #218838;
+    transform: translateY(-2px); /* Efecto de elevación */
+}
+
+/* Estilo de la tabla */
+table {
+    width: 100%;
+    margin-top: 30px;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+table, th, td {
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Estilo de los encabezados de la tabla */
+th {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/* Estilo para las filas alternas de la tabla */
+tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* Efecto hover para las filas de la tabla */
+tr:hover {
+    background-color: #e9ecef;
+    transition: background-color 0.3s ease;
+}
+
+/* Estilos responsivos */
+@media (max-width: 800px) {
+    .filter-form {
+        grid-template-columns: 1fr; /* Para pantallas más pequeñas, todo en una columna */
+        padding: 15px;
+    }
+
+    .filter-form button {
+        grid-column: span 1;
+    }
+
+    table, th, td {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .filter-form input,
+    .filter-form select,
+    .filter-form button {
+        font-size: 12px;
+        padding: 10px;
+    }
+}
+
+
 
 /* Fin LogIn */
 /* Inicio Manager */
