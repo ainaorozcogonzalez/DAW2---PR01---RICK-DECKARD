@@ -121,7 +121,7 @@ if (!isset($_SESSION['id_usuario'])) {
 
         // Si hemos introducido texto en el input 'buscarSala'
         if ($buscar_estado != "") {
-            $filtros[] = "salas.nombre LIKE ?";
+            $filtros[] = "mesas.estado LIKE ?";
             $parametros[] = '%' . $buscar_estado . '%';
         }
 
