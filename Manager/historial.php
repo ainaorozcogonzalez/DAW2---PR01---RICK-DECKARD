@@ -203,12 +203,25 @@ if (!isset($_SESSION['id_usuario'])) {
                             <input class="form-control mr-sm-2" style="margin-left: 10px;" type="search" name="buscarEstado" placeholder="Buscar Estado" aria-label="Buscar Estado" value="<?php if(isset($_GET['buscarEstado'])) {echo $_GET['buscarEstado'];} ?>">
                             <input style="color: #000000A6; margin-left: 10px;" class="form-control me-2" type="date" id="start" name="fecha" value="<?php if(isset($_GET['fecha'])) {echo $_GET['fecha'];} ?>"/>
                             <button type="submit" class="btn btn-primary" style="height: 93%;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="26" fill="currentColor" class="bi bi-calendar2-check-fill" viewBox="0 1.4 16 16">
-                                    <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5m9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5m-2.6 5.854a.5.5 0 0 0-.708-.708L7.5 10.793 6.354 9.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z" />
-                                </svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 21">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                            </svg>
+                            </button>
+                            <button type="submit" class="btn btn-danger" name="limpiar_filtros" style="height: 93%; margin-left: 10px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="26" fill="currentColor" class="bi bi-eraser-fill" viewBox="0 0 16 21">
+                                <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5a2 2 0 0 1 0-2.828zm.66 11.34L3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .707-.293z"/>
+                            </svg>
                             </button>
                         </form>
-                    <?php endif; ?>
+                    <?php
+
+                        if (isset($_GET['limpiar_filtros'])) {
+                            // Redirigir a la misma página sin parámetros
+                            header("Location: " . strtok($_SERVER["REQUEST_URI"], '?'));
+                            exit();
+                        }
+
+                    endif; ?>
 
                     <!-- Página Historial Mesas (predeterminada) -->
                     <li class="nav-item" style="margin-left: 10px;">
@@ -231,7 +244,7 @@ if (!isset($_SESSION['id_usuario'])) {
                     </li>
                     <li>
                         <a href="./manager_home.php" class="btn btn-secondary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="26" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 18">
                             <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
                             <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
                         </svg>
